@@ -1,4 +1,5 @@
 #include <cstdint> 
+#include <unistd.h>
 #include "../inc/memory.hpp"
 #include "../inc/instructions.hpp"
 
@@ -1364,6 +1365,7 @@ int main() {
         cycles = 4;
         break;*/
     }
+    usleep((cycles/4190000)*100000);
     uint8_t temp2 = read_byte(IE_R) & read_byte(IF_R); 
     if (temp2) {
         int cycleTemp = 0;
