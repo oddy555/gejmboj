@@ -2,11 +2,11 @@
 #include <unistd.h>
 #include "../inc/memory.hpp"
 #include "../inc/instructions.hpp"
+#include "../inc/video.hpp"
 
+static uint8_t ime = 0;
 
-
-int main() {
-  struct registers {
+struct registers {
     union {
       uint8_t A;
       uint8_t F;
@@ -30,25 +30,82 @@ int main() {
     uint16_t sp;
     uint16_t pc;
   } reg;
-  int z = 0x80;
-  int n = 0x40;
-  int h = 0x20;
-  int c = 0x10;
+int z = 0x80;
+int n = 0x40;
+int h = 0x20;
+int c = 0x10;
+
+
+void eval_opcode(uint16_t opcode,int cycles);
+
+int main() {
+  
+  init_mem();
+  init_video();
   //int a = 0x01;
   //int b = 0x02;
   //int c2 = 0x04;
   //int d = 0x08;    
   int cycles = 0;
-  uint16_t opcode = read_byte(reg.pc++);
+  uint16_t opcode;
   uint8_t temp;
 
   reg.sp = 0;
   reg.pc = 0;
-  init_mem();
 
-  int running = 1;    
-  while(running) {
+  int running = 0;    
+  while(!running) {
     opcode = read_byte(reg.pc++);
+    eval_opcode(opcode,cycles);
+
+    uint8_t temp2 = read_byte(IE_R) & read_byte(IF_R); 
+    if (ime == 1 && temp2) {
+        int cycleTemp = 0;
+        LD_16_n_nn(cycleTemp,reg.sp,reg.pc++);
+        cycles += 8 + temp;
+        
+        //TODO: Check if we should enable several interrupts here
+        
+        // V-Blank
+        if (temp2 & 0b00000001) {
+            LD_16_n_nn(cycleTemp,reg.pc,0x0040);
+            cycles += temp;
+            continue;
+        // LCD STAT
+        } else if (temp2 & 0b00000010) {
+            LD_16_n_nn(cycleTemp,reg.pc,0x0048);
+            cycles += temp;
+            continue;
+        // Timer
+        } else if (temp2 & 0b00000100) {
+            LD_16_n_nn(cycleTemp,reg.pc,0x0050);
+            cycles += temp;
+            continue;
+        // Serial
+        } else if (temp2 & 0b00001000) {
+            LD_16_n_nn(cycleTemp,reg.pc,0x0058);
+            cycles += temp;
+            continue;
+        // Joypad    
+        }  else if (temp2 & 0b00010000) {
+            LD_16_n_nn(cycleTemp,reg.pc, 0x0060);
+            cycles += temp;
+            continue;
+        } 
+    }
+    
+    //lcdController(cycles);
+    if (eventController() == 1) {
+        running = 1; 
+    }
+    usleep((cycles/4190000)*100000);
+  }    
+}
+
+void eval_opcode(uint16_t opcode,int cycles) {
+    
+    uint8_t temp;
+
     switch(opcode) {
     case 0x06:
       LD_8_n_nn(cycles,reg.B,reg.pc++);
@@ -724,11 +781,13 @@ int main() {
       break;
     case 0xF3://DI disable interrupts
         cycles = 4;
-        write_byte(IF_R,0); 
+        //write_byte(IF_R,0);
+        ime = 0; 
         break;
     case 0xFB://EI enable interrupts
         cycles = 4;
-        write_byte(IE_R,0b00011111);
+        //write_byte(IE_R,0b00011111);
+        ime = 1;
         break;    
     case 0x07:
       RLCA(cycles,reg.F,reg.A);
@@ -929,7 +988,8 @@ int main() {
       cycles += 8;
       reg.pc = read_word(reg.AF);
       //Enable interrupt
-        write_word(IE_R,0b00011111); 
+        //write_word(IE_R,0b00011111); 
+      ime = 1;
       cycles += 8; 
       break;
     case 0xCB:
@@ -1365,36 +1425,4 @@ int main() {
         cycles = 4;
         break;*/
     }
-    usleep((cycles/4190000)*100000);
-    uint8_t temp2 = read_byte(IE_R) & read_byte(IF_R); 
-    if (temp2) {
-        int cycleTemp = 0;
-        LD_16_n_nn(cycleTemp,reg.sp,reg.pc++);
-        cycles += 8 + temp;
-        
-        //Check if we should enable several interrupts here
-        if (temp2 & 0b00000001) {
-            LD_16_n_nn(cycleTemp,reg.pc,0x0040);
-            cycles += temp;
-            continue;
-        } else if (temp2 & 0b00000010) {
-            LD_16_n_nn(cycleTemp,reg.pc,0x0048);
-            cycles += temp;
-            continue;
-        } else if (temp2 & 0b00000100) {
-            LD_16_n_nn(cycleTemp,reg.pc,0x0050);
-            cycles += temp;
-            continue;
-        } else if (temp2 & 0b00001000) {
-            LD_16_n_nn(cycleTemp,reg.pc,0x0058);
-            cycles += temp;
-            continue;
-        }  else if (temp2 & 0b00010000) {
-            LD_16_n_nn(cycleTemp,reg.pc, 0x0060);
-            cycles += temp;
-            continue;
-        } 
-    }
-  }    
 }
-
