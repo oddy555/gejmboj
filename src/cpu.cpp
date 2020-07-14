@@ -99,13 +99,13 @@ int main() {
         running = 1; 
     }
     usleep((cycles/4190000)*100000);
+    cycles = 0;
   }    
 }
 
 void eval_opcode(uint16_t opcode,int cycles) {
     
     uint8_t temp;
-
     switch(opcode) {
     case 0x06:
       LD_8_n_nn(cycles,reg.B,reg.pc++);
@@ -1425,4 +1425,7 @@ void eval_opcode(uint16_t opcode,int cycles) {
         cycles = 4;
         break;*/
     }
+    
+
+printf("OPCODE: %d, CYCLES: %d\n",opcode,cycles);
 }
