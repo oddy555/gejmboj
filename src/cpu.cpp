@@ -63,7 +63,6 @@ int main() {
   int cycles = 0;
   uint16_t opcode = read_byte(reg.pc++);
   
- 
   //uint8_t temp = 0;
   reg.A = 0;
   reg.F = 0;
@@ -77,8 +76,8 @@ int main() {
   reg.pc = 0;
 
   int running = 1;    
-
 #ifdef DEBUGGER
+  int debugF = 0;
   start_debugger();
 #endif
 
@@ -86,7 +85,8 @@ int main() {
     opcode = read_byte(reg.pc++);
 
 #ifdef DEBUGGER
-    step();
+    debugF = step();
+   (debugF == 1) ? running = 0: running = 1;
 #endif
 
 #ifdef DEBUG
