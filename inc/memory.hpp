@@ -11,3 +11,5 @@ uint8_t read_byte(int addr);
 uint16_t read_word(int addr);
 
 void init_mem();
+
+void print_memory();

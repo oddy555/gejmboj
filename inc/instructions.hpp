@@ -1,5 +1,9 @@
 #include <cstdint>
-
+#include "../debug/debug.hpp"
+#ifdef DEBUG
+void setup_debug_instr(uint8_t& r,int i);
+void setup_debug_instr(uint16_t& a,uint16_t& b);
+#endif 
 void LD_8_n_nn(int& cycles,uint8_t& r,uint16_t addr);
 void LD_8_r_r(int &cycles, uint8_t& r1,uint8_t r2);
 void LD_8_r_r(int &cycles,uint16_t addr,uint8_t r);
@@ -17,9 +21,9 @@ void add_8(int& cycles,uint8_t& f,uint8_t& r1,uint8_t r2);
 void adc(int& cycles,uint8_t& f, uint8_t& r1,uint8_t r2);
 void sub_8(int& cycles,uint8_t& f ,uint8_t& r1,uint8_t r2);
 void subc(int& cycles,uint8_t& f,uint8_t& r1,uint8_t r2);
-void and_8(int &cycles,uint8_t f, uint8_t r1,uint8_t r2);
-void or_8(int &cycles,uint8_t f, uint8_t r1,uint8_t r2);
-void xor_8(int &cycles,uint8_t f, uint8_t r1,uint8_t r2);
+void and_8(int &cycles,uint8_t f, uint8_t &r1,uint8_t r2);
+void or_8(int &cycles,uint8_t f, uint8_t &r1,uint8_t r2);
+void xor_8(int &cycles,uint8_t f, uint8_t &r1,uint8_t r2);
 void cp_8(int& cycles,uint8_t& f ,uint8_t& r1,uint8_t r2);
 void inc_8(int& cycles,uint8_t& f ,uint8_t& r1);
 void dec_8(int& cycles,uint8_t& f ,uint8_t& r1);

@@ -30,9 +30,8 @@ void set_bootRom() {
   memory[9] = 0x7e;
   memory[0xA] = 0x20;*/
   std::ifstream bootRom;
-  //bootRom.open("../roms/DMG_ROM.bin",std::ios::in | std::ios::binary);
-    bootRom.open("/home/wintermute/programmering/gejmboj/roms/DMG_ROM.bin",std::ios::in | std::ios::binary);
-  
+    
+  bootRom.open("/home/wintermute/programmering/gejmboj/roms/DMG_ROM.bin",std::ios::in | std::ios::binary);
   if (bootRom.is_open()) {
       bootRom.read((char *) memory,256);
   } else {
@@ -58,14 +57,23 @@ void init_mem() {
 
 
 void init_rom() {
-    int romSize = 8192;
+    //int romSize = 8192;
+    int romSize = 32768;
     //read rom here?
-    std::ifstream rom;	
+    std::ifstream rom;
+
+    //rom.open("/home/wintermute/programmering/gejmboj/roms/PokemonRed.gb",std::ios::in | std::ios::binary);
+    //rom.open("/home/wintermute/programmering/gejmboj/roms/cpu_instrs.gb",std::ios::in |std::ios::binary);
+    //rom.open("/home/wintermute/programmering/gejmboj/roms/dmg-acid2.gb",std::ios::in |std::ios::binary);
+    rom.open("/home/wintermute/programmering/gejmboj/roms/cpu_instrs.gb",std::ios::in |std::ios::binary);
+
     if (rom.is_open()) {
         //@TODO: Read 32kB, this might have to be more flexible
-        rom.read((char *) memory + 146,romSize);
+        //rom.read((char *) memory + 256,romSize);
+        rom.read((char *) memory,romSize);
     }
     //rom = new uint8_t[romSize]; 
+    rom.close();
 }
 
 void write_byte(int addr,uint8_t data){
@@ -94,4 +102,11 @@ uint16_t read_word(int addr) {
     data = data + a;
     //data = (uint16_t) (((uint8_t *) memory)[addr]);
     return data;
-} 
+}
+
+void print_memory() {
+    std::cout << "Memory layout:" << std::endl;
+    for (int i = 0; i < 65535; i++) {
+        std::cout << "["<< std::hex << i<< "]" << "[" << std::hex << ((uint8_t *) memory)[i] << "]" << std::endl;
+    }
+}
