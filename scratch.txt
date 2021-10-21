@@ -1,0 +1,70 @@
+                case 0xCBF0:
+                    set_b_r(cycles,reg.B,6);
+                    reg.pc++;
+                    break;
+                case 0xCBF1:
+                    set_b_r(cycles,reg.C,6);
+                    reg.pc++;
+                    break;
+                case 0xCBF2:
+                    set_b_r(cycles,reg.D,6);
+                    reg.pc++;
+                    break;
+                case 0xCBF3:
+                    set_b_r(cycles,reg.E,6);
+                    reg.pc++;
+                    break;  
+                case 0xCBF4:
+                    set_b_r(cycles,reg.H,6);
+                    reg.pc++;
+                    break;
+                case 0xCBF5:
+                    set_b_r(cycles,reg.L,6);
+                    reg.pc++;
+                    break;
+                case 0xCBF6:
+                    temp = read_byte(reg.HL);
+                    set_b_r(cycles,temp,6);
+                    cycles = 16;
+                    write_byte(reg.HL);
+                    reg.pc++;
+                    break;
+                case 0xCBF7:
+                    set_b_r(cycles,reg.A,6);
+                    reg.pc++;
+                    break;
+                case 0xCBF8:
+                    set_b_r(cycles,reg.B,7);
+                    reg.pc++;
+                    break;
+                case 0xCBF9:
+                    set_b_r(cycles,reg.C,7);
+                    reg.pc++;
+                    break;
+                case 0xCBFA:
+                    set_b_r(cycles,reg.D,7);
+                    reg.pc++;
+                    break;
+                case 0xCBFB:
+                    set_b_r(cycles,reg.E,7);
+                    reg.pc++;
+                    break;  
+                case 0xCBFC:
+                    set_b_r(cycles,reg.H,7);
+                    reg.pc++;
+                    break;
+                case 0xCBFD:
+                    set_b_r(cycles,reg.L,7);
+                    reg.pc++;
+                    break;
+                case 0xCBFE:
+                    temp = read_byte(reg.HL);
+                    set_b_r(cycles,temp,7);
+                    cycles = 16;
+                    write_byte(reg.HL);
+                    reg.pc++;
+                    break;
+                case 0xCBFF:
+                    set_b_r(cycles,reg.A,7);
+                    reg.pc++;
+                    break;

@@ -1,9 +1,15 @@
 #include "debug.hpp"
 
+#include <iostream>
+void debug_print(std::string dbgString) {
+    std::cout << dbgString << std::endl;
+}
+
+
+
 #ifdef DEBUGGER 
 #include "../inc/memory.hpp"
-#include <iostream>
-#include <string>
+//#include <string>
 
 void start_debugger() {
     std::cout << "Starting debugger! Write help for commands" << std::endl;

@@ -109,3 +109,8 @@ void print_memory() {
         std::cout << "["<< std::hex << i<< "]" << "[" << std::hex << ((uint8_t *) memory)[i] << "]" << std::endl;
     }
 }
+
+void free_memory() {
+    //uint8_t* mem = (uint8_t *) &memory;
+    delete (uint8_t *) memory;    
+}
