@@ -204,29 +204,32 @@ void pop(int& cycles,Register16& r,uint16_t sp) {
 #endif
 }
 
-void add_8(int& cycles,uint8_t& f,Register8& r1,Register8 &r2) {
+void add_8(int& cycles, Register8& f,Register8& r1,Register8 &r2) {
     cycles = 4;
     int a = r1.getData();
     int b = r2.getData();
+    uint8_t flag = f.getData();
     if (a + b > 255) {
-        f |= 0x10;
+        flag |= 0x10;
     } else if (a + b == 0) {
-        f |= 0x80;
+        flag |= 0x80;
     }
     if (((a&0xf) + (b&0xf))&0x10){
-        f |= 0x20;
+        flag |= 0x20;
     }
-    f &= ~0x40; 
+    flag &= ~0x40; 
     r1.setData(a + b);
+    f.setData(flag);
 #ifdef DEBUG2
     std::cout << "add_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void add_8(int& cycles,uint8_t& f,Register8& r1,Register16 r2) {
+void add_8(int& cycles, Register8& flag,Register8& r1,Register16 r2) {
     cycles = 4;
     uint8_t t2 = read_byte(r2.getData());
     int a = (int) r1.getData();
+    uint8_t f = flag.getData();
     if (a + (int) t2 > 255) {
         f |= 0x10;
     } else if ((int) a + (int) t2 == 0) {
@@ -236,16 +239,18 @@ void add_8(int& cycles,uint8_t& f,Register8& r1,Register16 r2) {
         f |= 0x20;
     }
     f &= ~0x40; 
-    r1.setData(a + t2);;
+    r1.setData(a + t2);
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "add_8_" << r1.getName() << "_" << r2.getName()<< ", value: " << t2 << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
-void adc(int& cycles,uint8_t& f, Register8& r1,Register8 &r2) {
+void adc(int& cycles, Register8& flag, Register8& r1,Register8 &r2) {
     cycles = 4;
     uint8_t temp = 0; 
     int a = (int) r1.getData();
     int b = (int) r2.getData();
+    uint8_t f = flag.getData();
     if (f&0x10) {
         temp = 1;
     }
@@ -257,19 +262,21 @@ void adc(int& cycles,uint8_t& f, Register8& r1,Register8 &r2) {
     if (((a&0xf) + (b&0xf) + (f&0xf))&0x10){
         f |= 0x20;
     }
-    f &= ~0x40; 
-    r1.setData(a+b);  
+    f &= ~0x40;
+    flag.setData(f);
+    r1.setData(a + b + temp);  
 
 #ifdef DEBUG2
     std::cout << "adc_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void adc(int& cycles,uint8_t& f, Register8& r1,Register16 r2) {
+void adc(int& cycles, Register8& flag, Register8& r1,Register16 r2) {
     cycles = 4;
     uint8_t temp = 0;
     uint8_t t2 = read_byte(r2.getData());
     uint8_t a = r1.getData();
+    uint8_t f = flag.getData();
     if (f&0x10) {
         temp = 1;
     }
@@ -281,20 +288,22 @@ void adc(int& cycles,uint8_t& f, Register8& r1,Register16 r2) {
     if (((a&0xf) + (t2&0xf) + (f&0xf))&0x10){
         f |= 0x20;
     }
-    f &= ~0x40; 
-    r1.setData(a + t2);  
+    f &= ~0x40;
+    flag.setData(f);
+    r1.setData(a + t2 + temp);  
 
 #ifdef DEBUG2
     std::cout << "adc_8_" << r1.getName() << "_" << r2.getName() << ",value: " << t2 << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void sub_8(int& cycles,uint8_t& f ,Register8& r1,Register8 &r2) {
+void sub_8(int& cycles, Register8& flag ,Register8& r1,Register8 &r2) {
     cycles = 4;
     uint8_t temp1 = 0xf0;
     uint8_t temp2 = 0xf0;
     temp1  = ~temp1 & r1.getData();
     temp2 = ~temp2 & r2.getData();
+    uint8_t f = flag.getData();
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
@@ -303,21 +312,22 @@ void sub_8(int& cycles,uint8_t& f ,Register8& r1,Register8 &r2) {
     } else if ((int) r1.getData() - (int) r2.getData() == 0) {
         f |= 0x80;
     }
-    r1.setData(r1.getData() +r2.getData());
+    r1.setData(r1.getData() + r2.getData());
     f |= 0x40;
-
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "sub_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void sub_8(int& cycles,uint8_t& f ,Register16 & r1,Register16 r2) {
+void sub_8(int& cycles, Register8& flag ,Register8 & r1,Register16& r2) {
     cycles = 4;
     uint8_t temp1 = 0xf0;
     uint8_t temp2 = 0xf0;
     uint8_t temp3 = read_byte(r2.getData());
     temp1  = ~temp1 & r1.getData();
     temp2 = ~temp2 & temp3;
+    uint8_t f = flag.getData();
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
@@ -328,40 +338,42 @@ void sub_8(int& cycles,uint8_t& f ,Register16 & r1,Register16 r2) {
     }
     r1.setData(r1.getData() - r2.getData());
     f |= 0x40;
-
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "sub_8_" << r1.getName() << "_" << r2.getName() << ", value: " << temp3 << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
-void subc(int& cycles,uint8_t& f,uint8_t& r1,uint8_t &r2){
+void subc(int& cycles,Register8& flag, Register8& r1,Register8& r2){
     cycles = 4;
     int temp = 0;
+    uint8_t f = flag.getData();
     if (f&0x10) {
         temp = 1;
     }
     uint8_t temp1 = 0xf0;
     uint8_t temp2 = 0xf0;
-    temp1  = ~temp1 & r1;
-    temp2 = ~temp2 & r2;
+    temp1  = ~temp1 & r1.getData();
+    temp2 = ~temp2 & r2.getData();
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
-    if ((int) r1 - ((int) r2-(int) temp) < 0) {
+    if ((int) r1.getData() - ((int) r2.getData()-(int) temp) < 0) {
         f |= 0x10;
-    } else if ((int) r1 - ((int) r2 - (int) temp) == 0) {
+    } else if ((int) r1.getData() - ((int) r2.getData() - (int) temp) == 0) {
         f |= 0x80;
     }
-    r1 -= (r2+temp);
+    r1.setData(r1.getData() - (r2.getData()+temp));
      f |= 0x40;
-       
+      flag.setData(f); 
 #ifdef DEBUG2
     std::cout << "subc_8_" << matchRegister(r1) << "_" << matchRegister(r2) << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void subc(int& cycles,uint8_t& f,Register8& r1,Register16 r2){
+void subc(int& cycles, Register8& flag,Register8& r1,Register16& r2){
     cycles = 4;
     int temp = 0;
+    uint8_t f = flag.getData();
     if (f&0x10) {
         temp = 1;
     }
@@ -380,13 +392,14 @@ void subc(int& cycles,uint8_t& f,Register8& r1,Register16 r2){
     }
     r1.setData(r1.getData() + (temp3+temp));
      f |= 0x40;
-       
+      flag.setData(f); 
 #ifdef DEBUG2
     std::cout << "subc_8_" << r1.getName() << "_" << r2.getName() << ", value: " << temp3 << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
-void and_8(int &cycles,uint8_t &f, Register8 &r1,Register8 &r2) {
+void and_8(int &cycles,Register8 &flag, Register8 &r1,Register8 &r2) {
     cycles = 4;
+    uint8_t f = flag.getData();
     uint8_t res = r1.getData() & r2.getData();
     if (res == 0) {
         f |= 0x80;
@@ -395,14 +408,31 @@ void and_8(int &cycles,uint8_t &f, Register8 &r1,Register8 &r2) {
         f |= 0x20;
         f &= ~0x10; 
         r1.setData(res);
-
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "and_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void or_8(int &cycles,uint8_t &f, Register8 &r1,Register8 &r2) {
+void and_8(int &cycles,Register8 &flag, Register8 &r1,Register16 &r2) {
     cycles = 4;
+    uint8_t f = flag.getData();
+    uint8_t res = r1.getData() & read_word(r2.getData());
+    if (res == 0) {
+        f |= 0x80;
+    }
+        f &= ~0x40;
+        f |= 0x20;
+        f &= ~0x10; 
+        r1.setData(res);
+    flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "and_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void or_8(int &cycles,Register8 &flag, Register8 &r1,Register8 &r2) {
+    cycles = 4;
+    uint8_t f = flag.getData();
     uint8_t res = r1.getData() | r2.getData();
     if (res == 0) {
         f |= 0x80;
@@ -411,26 +441,45 @@ void or_8(int &cycles,uint8_t &f, Register8 &r1,Register8 &r2) {
         f &= ~0x20;
         f &= ~0x10; 
     r1.setData(res);
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "or_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void xor_8(int &cycles,uint8_t &f, Register8 r1,Register8 r2) {
+void xor_8(int &cycles,Register8 &flag, Register8& r1,Register8& r2) {
     uint8_t res = r1.getData() & r2.getData();
     cycles = 4;
+    uint8_t f = flag.getData();
     if (res == 0) {
         f |= 0x80;
     }
         f &= ~0x40;
-        f |= 0x20;
+        f &= ~0x20;
         f &= ~0x10; 
     r1.setData(res);
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "xor_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
+void xor_8(int &cycles,Register8 &flag, Register8& r1,Register16& r2) {
+    uint8_t res = r1.getData() & read_word(r2.getData());
+    cycles = 4;
+    uint8_t f = flag.getData();
+    if (res == 0) {
+        f |= 0x80;
+    }
+        f &= ~0x40;
+        f &= ~0x20;
+        f &= ~0x10; 
+    r1.setData(res);
+    flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "xor_8_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
 void cp_8(int& cycles,uint8_t& f ,Register8 r1,Register8 r2) {
     cycles = 4;
     uint8_t temp1 = 0xf0;
