@@ -13,7 +13,13 @@
 #define DEBUG_OPCODE
  
 #define WORD_LOAD 2
-#define D8 read_byte(reg.PC.getData()-1) 
+#define D8 read_byte(reg.PC.getData_()-1) 
+#define D16 read_word(reg.PC.getData_()-2)
+
+#define FLAG_Z 0x80
+#define FLAG_N 0x40
+#define FLAG_H 0x20
+#define FLAG_C 0x10
 
 static uint8_t ime = 0;
 
@@ -178,6 +184,7 @@ void init_registers() {
 }
 
 int eval_opcode(uint16_t opcode, int cycles) {
+    uint16_t lastPC = 0;
     switch(opcode) {
         case 0x00:
             cycles = 4;
@@ -230,6 +237,36 @@ int eval_opcode(uint16_t opcode, int cycles) {
             std::cout << "LD B " << std::hex << D8  << " ; " << reg.PC.getData_()-2 << std::endl;
 #endif
             break;
+        case 0x07:
+            reg.PC.inc(1);
+            RLCA(cycles, reg.F, reg.A);
+#ifdef DEBUG_OPCODE 
+            std::cout << "RLCA " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0x08:
+            reg.PC.inc(1);
+            LD_8_r_r(cycles, read_word(reg.PC.getData_()), reg.SP.getData_());
+            reg.PC.inc(2);
+            cycles += 8;
+#ifdef DEBUG_OPCODE 
+            std::cout << "LD " << std::hex << D16 << " SP " << " ; " << reg.PC.getData_()-3 << std::endl;
+#endif
+            break;
+        case 0x09:
+            reg.PC.inc(1);
+            add_16(cycles, reg.F, reg.HL, reg.BC);
+#ifdef DEBUG_OPCODE 
+            std::cout << "ADD HL BC " << std::hex  << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0x0A:
+            reg.PC.inc(1);
+            LD_8_n_nn(cycles, reg.A, reg.BC.getData());
+#ifdef DEBUG_OPCODE 
+            std::cout << "LD A (BC) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
         case 0x10: //TODO :Add halting of cpu and display 
             cycles = 4;
             reg.PC.inc(2);
@@ -278,15 +315,50 @@ int eval_opcode(uint16_t opcode, int cycles) {
             std::cout << "LD D " << std::hex << D8  << " ; " << reg.PC.getData_()-2 << std::endl;
 #endif
             break;
+        case 0x17:
+            reg.PC.inc(1);
+            RLA(cycles, reg.F, reg.A);
+#ifdef DEBUG_OPCODE 
+            std::cout << "RLA " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0x18:
+            lastPC = reg.PC.getData_();
+            reg.PC.setData_(reg.PC.getData_() + (int8_t) read_byte((reg.PC.getData_()+1)));
+            cycles += 12;
+#ifdef DEBUG_OPCODE 
+            std::cout << "JR " << std::hex << reg.PC.getData_() << " ; " << lastPC << std::endl;
+#endif
+            break;
+        case 0x19:
+            reg.PC.inc(1);
+            add_16(cycles, reg.F, reg.HL, reg.DE);
+#ifdef DEBUG_OPCODE 
+            std::cout << "ADD HL DE " << std::hex  << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0x1A:
+            reg.PC.inc(1);
+            LD_8_n_nn(cycles, reg.A, reg.DE.getData());
+#ifdef DEBUG_OPCODE 
+            std::cout << "LD A (DE) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
         case 0x20:
-            cycles = 12;
-            if (reg.AF.getHighData() & ~0x20) 
-                reg.PC.setData(read_word(reg.PC.getData()));
-            else
+            cycles = 8;
+            if ((reg.F.getData() & FLAG_Z) == 0x00) {
+                cycles+=4;
+                uint16_t tmpAddr = reg.PC.getData_();
+                reg.PC.setData_(tmpAddr + (int8_t) read_byte(tmpAddr + 1));
+#ifdef DEBUG_OPCODE 
+            std::cout << "JR NZ " << std::hex << reg.PC.getData_()  << "; " << tmpAddr << std::endl;
+#endif
+            } else {
                 reg.PC.inc(2);
 #ifdef DEBUG_OPCODE 
-            std::cout << "JR NZ " << std::hex << "; " << reg.PC.getData_()-1 << std::endl;
+            std::cout << "JR NZ " << std::hex << "; " << reg.PC.getData_()-2 << std::endl;
 #endif
+            }
             break;
         case 0x21:
             reg.PC.inc(1);
@@ -332,17 +404,61 @@ int eval_opcode(uint16_t opcode, int cycles) {
             std::cout << "LD H " << std::hex << D8  << " ; " << reg.PC.getData_()-2 << std::endl;
 #endif
             break;
-        case 0x30:
-            cycles = 8;
-            if (reg.AF.getHighData() & ~0x20) 
-                reg.PC.setData(reg.PC.getData() + read_byte(reg.PC.getData()));
-            else 
-                reg.PC.inc(1);
-            break;
+        case 0x27:
+            reg.PC.inc(1);
+            daa(cycles, reg.F, reg.A);
 #ifdef DEBUG_OPCODE 
-            std::cout << "JR NZ " << std::hex << "; " << reg.PC.getData_()-1 << std::endl;
+            std::cout << "DAA " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
 #endif
-        case 0x31:
+            break;
+        case 0x28:
+            cycles = 8;
+            if (reg.F.getData() & FLAG_Z) {
+                cycles+=4;
+                uint16_t tmpAddr = reg.PC.getData_();
+                reg.PC.setData_(tmpAddr + (int8_t) read_byte(tmpAddr + 1));
+#ifdef DEBUG_OPCODE 
+            std::cout << "JR Z " << std::hex << reg.PC.getData_()  << "; " << tmpAddr << std::endl;
+#endif
+            } else {
+                reg.PC.inc(2);
+#ifdef DEBUG_OPCODE 
+            std::cout << "JR Z " << std::hex << "; " << reg.PC.getData_()-2 << std::endl;
+#endif
+            }
+            break;
+            case 0x29:
+            reg.PC.inc(1);
+            add_16(cycles, reg.F, reg.HL, reg.HL);
+#ifdef DEBUG_OPCODE 
+            std::cout << "ADD HL HL " << std::hex  << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0x2A:
+            reg.PC.inc(1);
+            LD_8_n_nn(cycles, reg.A, reg.HL.getData());
+            reg.HL.setData(reg.HL.getData() + 1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "LD A (HL+) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+       case 0x30:
+            cycles = 8;
+            if ((reg.AF.getHighData() & FLAG_C) == 0x00) { 
+                cycles += 4;
+                uint16_t prevAddr = reg.PC.getData_();
+                reg.PC.setData(reg.PC.getData() + (int8_t) read_byte(reg.PC.getData() + 1));
+#ifdef DEBUG_OPCODE 
+                std::cout << "JR NC " << std::hex << reg.PC.getData_()  << "; " << prevAddr << std::endl;
+#endif
+            } else { 
+                reg.PC.inc(2);
+#ifdef DEBUG_OPCODE 
+                std::cout << "JR NC " << std::hex << "; " << reg.PC.getData_()-2 << std::endl;
+#endif
+            }
+            break;
+            case 0x31:
             reg.PC.inc(1);
             LD_16_n_nn(cycles, reg.SP, reg.PC.getData_());
             reg.PC.inc(WORD_LOAD);
@@ -350,40 +466,78 @@ int eval_opcode(uint16_t opcode, int cycles) {
             std::cout << "LD SP " << std::hex << read_word(reg.PC.getData_()) << "; " << reg.PC.getData_()-2 << std::endl;
 #endif
             break;
-        case 0x32:
+            case 0x32:
             reg.PC.inc(1);
             LDD_8(cycles,reg.HL,reg.A);
 #ifdef DEBUG_OPCODE 
             std::cout << "LD (HL-) A" << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
 #endif
             break;
-        case 0x33:
+            case 0x33:
             reg.PC.inc(1);
             inc_16(cycles, reg.SP);
 #ifdef DEBUG_OPCODE 
             std::cout << "INC SP" << std::hex << "; " << reg.PC.getData_()-1 << std::endl;
 #endif
             break;
-        case 0x34:
+            case 0x34:
             reg.PC.inc(1);
             inc_8(cycles, reg.F, reg.HL.getData());
 #ifdef DEBUG_OPCODE 
             std::cout << "INC HL " << std::hex << "; " << reg.PC.getData_()-1 << std::endl;
 #endif
             break;
-        case 0x35:
+            case 0x35:
             reg.PC.inc(1);
             dec_8(cycles, reg.F, reg.HL.getData());
 #ifdef DEBUG_OPCODE 
             std::cout << "DEC (HL) " << std::hex << "; " << reg.PC.getData_()-1 << std::endl;
 #endif
             break;
-        case 0x36:
+            case 0x36:
             reg.PC.inc(1);
             LD_8_r_r(cycles, reg.HL.getData(), reg.PC.getData());
             reg.PC.inc(1);
 #ifdef DEBUG_OPCODE 
             std::cout << "LD (HL) " << std::hex << D8  << " ; " << reg.PC.getData_()-2 << std::endl;
+#endif
+            break;
+            case 0x37:
+            reg.PC.inc(1);
+            scf(cycles, reg.F);
+#ifdef DEBUG_OPCODE 
+            std::cout << "SCF " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+            case 0x38:
+            cycles = 8;
+            if (reg.AF.getHighData() & FLAG_C) { 
+                    cycles += 4;
+                    uint16_t prevAddr = reg.PC.getData_();
+                    reg.PC.setData(reg.PC.getData() + (int8_t) read_byte(reg.PC.getData() + 1));
+#ifdef DEBUG_OPCODE 
+                    std::cout << "JR C " << std::hex << reg.PC.getData_()  << "; " << prevAddr << std::endl;
+#endif
+                    } else { 
+                    reg.PC.inc(2);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "JR C " << std::hex << "; " << reg.PC.getData_()-2 << std::endl;
+#endif
+                    }
+                    break;
+        case 0x39:
+            reg.PC.inc(1);
+            add_16(cycles, reg.F, reg.HL, reg.SP);
+#ifdef DEBUG_OPCODE 
+            std::cout << "ADD HL SP " << std::hex  << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0x3A:
+            reg.PC.inc(1);
+            LD_8_n_nn(cycles, reg.A, reg.HL.getData());
+            reg.HL.setData(reg.HL.getData() - 1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "LD A (HL-) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
 #endif
             break;
         case 0x40:
@@ -1130,7 +1284,7 @@ int eval_opcode(uint16_t opcode, int cycles) {
 #endif
             break;
         case 0xAA:
-            subc(cycles, reg.F, reg.A, reg.D);
+            xor_8(cycles, reg.F, reg.A, reg.D);
             reg.PC.inc(1);
 #ifdef DEBUG_OPCODE 
             std::cout << "XOR A D " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
@@ -1169,6 +1323,118 @@ int eval_opcode(uint16_t opcode, int cycles) {
             reg.PC.inc(1);
 #ifdef DEBUG_OPCODE 
             std::cout << "XOR A A " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB0:
+            or_8(cycles, reg.F, reg.A, reg.B);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "AND A B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB1:
+            or_8(cycles, reg.F, reg.A, reg.C);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "OR A C " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB2:
+            or_8(cycles, reg.F, reg.A, reg.D);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "OR A D " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB3:
+            or_8(cycles, reg.F, reg.A, reg.E);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "OR A E " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB4:
+            or_8(cycles, reg.F, reg.A, reg.H);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "OR A B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB5:
+            or_8(cycles, reg.F, reg.A, reg.L);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "OR A L " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB6:
+            or_8(cycles, reg.F, reg.A, reg.HL);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "OR A (HL) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB7:
+            or_8(cycles, reg.F, reg.A, reg.A);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "OR A A " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB8:
+            cp_8(cycles, reg.F, reg.A, reg.B);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xB9:
+            cp_8(cycles, reg.F, reg.A, reg.C);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A C " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xBA:
+            cp_8(cycles, reg.F, reg.A, reg.D);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A D " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xBB:
+            cp_8(cycles, reg.F, reg.A, reg.E);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A E " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xBC:
+            cp_8(cycles, reg.F, reg.A, reg.H);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xBD:
+            cp_8(cycles, reg.F, reg.A, reg.L);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A L " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xBE:
+            cp_8(cycles, reg.F, reg.A, reg.HL);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A (HL) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+            break;
+        case 0xBF:
+            cp_8(cycles, reg.F, reg.A, reg.A);
+            reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+            std::cout << "CP A A " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
 #endif
             break;
         /*case 0x10: //TODO :Add halting of cpu and display 
