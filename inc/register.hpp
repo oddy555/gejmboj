@@ -48,7 +48,7 @@ class Register16 {
         void setData_(uint16_t data);
         void setName(std::string name);
         void inc(uint16_t n);
-
+        void dec(uint16_t n);
         //std::string toString();
         Register16();
         Register16(Register8* low, Register8* high);

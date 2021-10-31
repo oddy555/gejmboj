@@ -174,7 +174,7 @@ void LD_16_r_r(int& cycles, Register16 & r1,uint16_t r2) {
 #endif
 
 }
-void push(int& cycles,Register16& sp,Register16 r) {
+void push(int& cycles, Register16& r,Register16& sp) {
     cycles = 16;
     write_word(sp.getData(),r.getData());
     sp.setData(sp.getData()-2);
@@ -184,20 +184,29 @@ void push(int& cycles,Register16& sp,Register16 r) {
 #endif
 }
 
-void pop(int& cycles,uint16_t& r,uint16_t sp) {
-    cycles = 12;
-    r = read_word(sp);
-    sp+=2;
+void push(int& cycles, uint16_t r, Register16& sp) {
+    cycles = 16;
+    write_word(sp.getData(),r);
+    sp.setData(sp.getData()-2);
+
+#ifdef DEBUG2
+    std::cout << "push_" << matchRegister(sp) << "_" <<",value: "<< r << ", cycles: " << std::dec << cycles << std::endl;
+#endif
+}
+void pop(int& cycles, uint16_t& addr, Register16& sp) {
+    cycles = 8;
+    addr = read_word(sp.getData_());
+    sp.setData(sp.getData_()+2);
 
 #ifdef DEBUG2
     std::cout << "pop_" << matchRegister(r) << "_" << matchRegister(sp)<<",value: "<<r<< ", cycles: " << std::dec << cycles << std::endl;
 #endif
 }
 
-void pop(int& cycles,Register16& r,uint16_t sp) {
+void pop(int& cycles,Register16& r, Register16& sp) {
     cycles = 12;
-    r.setData(read_word(sp));
-    sp+=2;
+    r.setData(read_word(sp.getData_()));
+    sp.inc(2);
 
 #ifdef DEBUG2
     std::cout << "pop_" << r.getName() << "_" << matchRegister(sp)<<",value: "<<r.getData()<< ", cycles: " << std::dec << cycles << std::endl;
@@ -226,7 +235,7 @@ void add_8(int& cycles, Register8& f,Register8& r1,Register8 &r2) {
 }
 
 void add_8(int& cycles, Register8& flag,Register8& r1,Register16 r2) {
-    cycles = 4;
+    cycles = 8;
     uint8_t t2 = read_byte(r2.getData());
     int a = (int) r1.getData();
     uint8_t f = flag.getData();
@@ -321,7 +330,7 @@ void sub_8(int& cycles, Register8& flag ,Register8& r1,Register8 &r2) {
 }
 
 void sub_8(int& cycles, Register8& flag ,Register8 & r1,Register16& r2) {
-    cycles = 4;
+    cycles = 8;
     uint8_t temp1 = 0xf0;
     uint8_t temp2 = 0xf0;
     uint8_t temp3 = read_byte(r2.getData());
@@ -415,9 +424,9 @@ void and_8(int &cycles,Register8 &flag, Register8 &r1,Register8 &r2) {
 }
 
 void and_8(int &cycles,Register8 &flag, Register8 &r1,Register16 &r2) {
-    cycles = 4;
+    cycles = 8;
     uint8_t f = flag.getData();
-    uint8_t res = r1.getData() & read_word(r2.getData());
+    uint8_t res = r1.getData() & read_byte(r2.getData());
     if (res == 0) {
         f |= 0x80;
     }
@@ -663,10 +672,11 @@ void add_16(int& cycles,uint8_t& f, Register16& r1,Register16 r2) {
 #endif
 }
 
-void add_sp(int& cycles,uint8_t& f,Register16& r1,Register16 r2) {
+void add_sp(int& cycles,Register8& flag,Register16& r1,Register16& r2) {
     cycles = 16; 
     int a = r1.getData();
     int b = r2.getData();
+    uint8_t f = flag.getData();
     if ((int) a + (int) b > 65535) {
         f |= 0x10;
     } else if ((int) a + (int) b == 0) {
@@ -678,7 +688,7 @@ void add_sp(int& cycles,uint8_t& f,Register16& r1,Register16 r2) {
     f &= ~0x40; 
     f &= ~0x80;
     r1.setData(r1.getData() + r2.getData());
-
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "add_sp_" << r1.getName() << "_" << r2.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif
@@ -689,7 +699,7 @@ void inc_16(int& cycles,Register16& r1) {
     r1.setData(r1.getData() + 1);    
 
 #ifdef DEBUG2
-    std::cout << "dec_16_" << r1.getName() << ", cycles: " << std::dec << cycles << std::endl;
+    std::cout << "inc_16_" << r1.getName() << ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
@@ -701,11 +711,12 @@ void dec_16(int& cycles,Register16& r1) {
 #endif 
 }
 
-void ccf(int& cycles,uint8_t &f) {
+void ccf(int& cycles, Register8& flag) {
+    uint8_t f = flag.getData();
     cycles = 4;
     f &= ~0x60 & ~0x40;
-    f ^= 0x20;
-
+    f ^= 0x10;
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "ccf" << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
@@ -760,12 +771,13 @@ void daa(int& cycles, Register8& flag, Register8& r) {
 }
 
 
-void cpl(int& cycles,uint8_t& f,Register8& r) {
+void cpl(int& cycles,Register8& flag,Register8& r) {
     cycles = 4;
+    uint8_t f = flag.getData();
     f |= 0x60;  
     f |= 0x40;
     r.setData(~r.getData());
-
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "cpl" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
@@ -826,37 +838,47 @@ void RLA(int& cycles,Register8& flag,Register8& r) {
 #endif 
 }
 
-void RRCA(int& cycles,uint8_t& f,Register8& r) {
+void RRCA(int& cycles,Register8& flag,Register8& r) {
     uint8_t x = r.getData();
+    uint8_t f = flag.getData();
+    uint8_t prevMSB = (x & 0x01) << 7;
     if (0x01 & x) {
-        f |= 0x20;
+        f |= 0x10;
     } else {
-        f &= ~0x20;
+        f &= ~0x10;
     }
     f &= ~0x60 & ~0x40;
     x>>= 1;
-    x+=1;
+    x += prevMSB;
     if (x == 0) {
         f |= 0x80;
        
     }
     cycles = 4;
-
+    flag.setData(f);
 #ifdef DEBUG2
     std::cout << "RRCA_r" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void RRA(int& cycles,uint8_t& f,Register8& r) {
+void RRA(int& cycles,Register8& flag,Register8& r) {
    uint8_t x = r.getData();
+   uint8_t f = flag.getData();
+   uint8_t carry = (f & 0x10) >> 1 ;  
+   if (x & 0x01) {
+    f |= 0x10;
+   } else {
+    f &= ~0x01;
+   }
    cycles = 4;
-     f &= ~0x60 & ~0x40;
-    x <<= 1;
-    x+=1;
-    if (x == 0) {
-        f |= 0x80;
-    }
-    r.setData(x);
+   f &= ~0x60 & ~0x40;
+   x >>= 1;
+   x+=carry;
+   if (x == 0) {
+       f |= 0x80;
+   }
+   r.setData(x);
+   flag.setData(f);
 #ifdef DEBUG2
     std::cout << "RRA_r" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
@@ -959,9 +981,9 @@ void rst(int& cycles,Register16& sp, Register16& pc, int n) {
     std::cout << "rst_" << sp.getName() << "_" << pc.getName() << ", cycles: " << std::dec << 16 << std::endl << "  ";
 #endif 
     push(cycles, sp, pc);
-    cycles += 16; //In doc it says 32
+    cycles += 32; //In doc it says 32
     //pc = read_byte(pc);
-    pc.setData(read_word(n));  
+    pc.setData(n);  
 }
 
 

@@ -106,3 +106,7 @@ void Register16::setName(std::string name) {
 void Register16::inc(uint16_t n) {
     this-> data = this -> data + n;
 }
+
+void Register16::dec(uint16_t n) {
+    this-> data = this -> data - n;
+}
