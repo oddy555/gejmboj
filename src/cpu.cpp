@@ -2060,6 +2060,1800 @@ int eval_opcode(uint16_t opcode, int cycles) {
         case 0xCB:
             reg.PC.inc(1);
             cycles += 4;
+            switch(reg.PC.getData_()) {
+                case 0x00:
+                    RLC(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x01:
+                    RLC(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC C " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x02:
+                    RLC(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC D " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x03:
+                    RLC(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC E " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x04:
+                    RLC(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC H " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x05:
+                    RLC(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC L " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x06:
+                    RLC(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC (HL) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x07:
+                    RLC(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RLC A " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x08:
+                    RRC(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x09:
+                    RRC(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC C " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x0A:
+                    RRC(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC D " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x0B:
+                    RRC(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC E " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x0C:
+                    RRC(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC H " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x0D:
+                    RRC(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC L " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x0E:
+                    RRC(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC (HL) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x0F:
+                    RRC(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "RRC A " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x10:
+                    RL(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x11:
+                    RL(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x12:
+                    RL(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x13:
+                    RL(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x14:
+                    RL(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x15:
+                    RL(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x16:
+                    RL(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x17:
+                    RL(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RL A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x18:
+                    RR(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x19:
+                    RR(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x1A:
+                    RR(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x1B:
+                    RR(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x1C:
+                    RR(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x1D:
+                    RR(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x1E:
+                    RR(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x1F:
+                    RR(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "RR A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x20:
+                    SLA(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x21:
+                    SLA(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x22:
+                    SLA(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x23:
+                    SLA(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x24:
+                    SLA(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x25:
+                    SLA(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x26:
+                    SLA(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x27:
+                    SLA(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SLA A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x28:
+                    SRA(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x29:
+                    SRA(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x2A:
+                    SRA(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x2B:
+                    SRA(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x2C:
+                    SRA(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x2D:
+                    SRA(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x2E:
+                    SRA(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x2F:
+                    SRA(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE
+                    std::cout << "SRA A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x30:
+                    SWAP(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SLA B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x31:
+                    SWAP(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SLA C " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x32:
+                    SWAP(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SWAP D " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x33:
+                    SWAP(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SWAP E " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x34:
+                    SWAP(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SWAP H " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x35:
+                    SWAP(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SWAP L " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x36:
+                    SWAP(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SWAP (HL) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x37:
+                    SWAP(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SWAP A " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x38:
+                    SWAP(cycles, reg.F, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SWAP B " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x39:
+                    SRL(cycles, reg.F, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SRA C " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x3A:
+                    SRL(cycles, reg.F, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SRL D " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x3B:
+                    SRL(cycles, reg.F, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SRA E " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x3C:
+                    SRL(cycles, reg.F, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SRA H " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x3D:
+                    SRL(cycles, reg.F, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SRL L " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x3E:
+                    SRL(cycles, reg.F, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SRL (HL) " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x3F:
+                    SRL(cycles, reg.F, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SRL A " << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+#endif
+                    break;
+                case 0x40:
+                    bit_b_r(cycles, reg.F, 0, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SLA B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x41:
+                    bit_b_r(cycles, reg.F, 0, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 0 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x42:
+                    bit_b_r(cycles, reg.F, 0, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 0 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x43:
+                    bit_b_r(cycles, reg.F, 0, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 0 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x44:
+                    bit_b_r(cycles, reg.F, 0, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 0 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x45:
+                    bit_b_r(cycles, reg.F, 0, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 0 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x46:
+                    bit_b_r(cycles, reg.F, 0, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 0 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x47:
+                    bit_b_r(cycles, reg.F, 0, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 0 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0x48:
+                    bit_b_r(cycles, reg.F, 1, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x49:
+                    bit_b_r(cycles, reg.F, 1, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x4A:
+                    bit_b_r(cycles, reg.F, 1, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x4B:
+                    bit_b_r(cycles, reg.F, 1, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x4C:
+                    bit_b_r(cycles, reg.F,1, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x4D:
+                    bit_b_r(cycles, reg.F, 1, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x4E:
+                    bit_b_r(cycles, reg.F, 1, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x4F:
+                    bit_b_r(cycles, reg.F, 1, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 1 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x50:
+                    bit_b_r(cycles, reg.F, 2, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SLA B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x51:
+                    bit_b_r(cycles, reg.F, 2, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 2 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x52:
+                    bit_b_r(cycles, reg.F, 2, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 2 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x53:
+                    bit_b_r(cycles, reg.F, 2, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 2 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x54:
+                    bit_b_r(cycles, reg.F, 2, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 2 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x55:
+                    bit_b_r(cycles, reg.F, 2, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 2 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x56:
+                    bit_b_r(cycles, reg.F, 2, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 2 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x57:
+                    bit_b_r(cycles, reg.F, 2, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 2 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0x58:
+                    bit_b_r(cycles, reg.F, 3, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x59:
+                    bit_b_r(cycles, reg.F, 3, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x5A:
+                    bit_b_r(cycles, reg.F,3, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x5B:
+                    bit_b_r(cycles, reg.F, 3, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x5C:
+                    bit_b_r(cycles, reg.F, 3, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x5D:
+                    bit_b_r(cycles, reg.F, 3, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x5E:
+                    bit_b_r(cycles, reg.F, 3, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x5F:
+                    bit_b_r(cycles, reg.F, 3, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 3 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x60:
+                    bit_b_r(cycles, reg.F, 4, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x61:
+                    bit_b_r(cycles, reg.F, 4, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x62:
+                    bit_b_r(cycles, reg.F, 4, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x63:
+                    bit_b_r(cycles, reg.F, 4, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x64:
+                    bit_b_r(cycles, reg.F, 4, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x65:
+                    bit_b_r(cycles, reg.F, 4, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x66:
+                    bit_b_r(cycles, reg.F, 4, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x67:
+                    bit_b_r(cycles, reg.F, 4, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 4  A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0x68:
+                    bit_b_r(cycles, reg.F, 5, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x69:
+                    bit_b_r(cycles, reg.F, 5, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x6A:
+                    bit_b_r(cycles, reg.F, 5, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x6B:
+                    bit_b_r(cycles, reg.F, 5, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x6C:
+                    bit_b_r(cycles, reg.F, 5, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x6D:
+                    bit_b_r(cycles, reg.F, 5, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x6E:
+                    bit_b_r(cycles, reg.F, 5, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x6F:
+                    bit_b_r(cycles, reg.F, 5, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 5 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x70:
+                    bit_b_r(cycles, reg.F, 6, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x71:
+                    bit_b_r(cycles, reg.F, 6, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x72:
+                    bit_b_r(cycles, reg.F, 6, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x73:
+                    bit_b_r(cycles, reg.F, 6, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x74:
+                    bit_b_r(cycles, reg.F, 6, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x75:
+                    bit_b_r(cycles, reg.F, 6, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x76:
+                    bit_b_r(cycles, reg.F, 6, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x77:
+                    bit_b_r(cycles, reg.F, 6, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 6  A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0x78:
+                    bit_b_r(cycles, reg.F, 7, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x79:
+                    bit_b_r(cycles, reg.F, 7, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x7A:
+                    bit_b_r(cycles, reg.F, 7, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x7B:
+                    bit_b_r(cycles, reg.F, 7, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x7C:
+                    bit_b_r(cycles, reg.F, 7, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x7D:
+                    bit_b_r(cycles, reg.F, 7, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x7E:
+                    bit_b_r(cycles, reg.F, 7, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x7F:
+                    bit_b_r(cycles, reg.F, 7, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "bit_b_r 7 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x80:
+                    res_b_r(cycles, reg.F, 0, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x81:
+                    res_b_r(cycles, reg.F, 0, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x82:
+                    res_b_r(cycles, reg.F, 0, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x83:
+                    res_b_r(cycles, reg.F, 0, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x84:
+                    res_b_r(cycles, reg.F, 0, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x85:
+                    res_b_r(cycles, reg.F, 0, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x86:
+                    res_b_r(cycles, reg.F, 0, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x87:
+                    res_b_r(cycles, reg.F, 0, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 0 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0x88:
+                    res_b_r(cycles, reg.F, 1, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x89:
+                    res_b_r(cycles, reg.F, 1, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x8A:
+                    res_b_r(cycles, reg.F, 1, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x8B:
+                    res_b_r(cycles, reg.F, 1, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x8C:
+                    res_b_r(cycles, reg.F, 1, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x8D:
+                    res_b_r(cycles, reg.F, 1, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x8E:
+                    res_b_r(cycles, reg.F, 1, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x8F:
+                    res_b_r(cycles, reg.F, 1, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 1 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x90:
+                    res_b_r(cycles, reg.F, 2, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SLA B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x91:
+                    res_b_r(cycles, reg.F, 2, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 2 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x92:
+                    res_b_r(cycles, reg.F, 2, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 2 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x93:
+                    res_b_r(cycles, reg.F, 2, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 2 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x94:
+                    res_b_r(cycles, reg.F, 2, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 2 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x95:
+                    res_b_r(cycles, reg.F, 2, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 2 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x96:
+                    res_b_r(cycles, reg.F, 2, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 2 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x97:
+                    res_b_r(cycles, reg.F, 2, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 2 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0x98:
+                    res_b_r(cycles, reg.F, 3, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x99:
+                    res_b_r(cycles, reg.F, 3, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x9A:
+                    res_b_r(cycles, reg.F, 3, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x9B:
+                    res_b_r(cycles, reg.F, 3, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x9C:
+                    res_b_r(cycles, reg.F, 3, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x9D:
+                    res_b_r(cycles, reg.F, 3, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x9E:
+                    res_b_r(cycles, reg.F, 3, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0x9F:
+                    res_b_r(cycles, reg.F, 3, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 3 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA0:
+                    res_b_r(cycles, reg.F, 4, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA1:
+                    res_b_r(cycles, reg.F, 4, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA2:
+                    res_b_r(cycles, reg.F, 4, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA3:
+                    res_b_r(cycles, reg.F, 4, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA4:
+                    res_b_r(cycles, reg.F, 4, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA5:
+                    res_b_r(cycles, reg.F, 4, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA6:
+                    res_b_r(cycles, reg.F, 4, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA7:
+                    res_b_r(cycles, reg.F, 4, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 4  A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0xA8:
+                    res_b_r(cycles, reg.F, 5, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xA9:
+                    res_b_r(cycles, reg.F, 5, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xAA:
+                    res_b_r(cycles, reg.F, 5, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xAB:
+                    res_b_r(cycles, reg.F, 5, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xAC:
+                    res_b_r(cycles, reg.F, 5, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xAD:
+                    res_b_r(cycles, reg.F, 5, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xAE:
+                    res_b_r(cycles, reg.F, 5, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xAF:
+                    res_b_r(cycles, reg.F, 5, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 5 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB0:
+                    res_b_r(cycles, reg.F, 6, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB1:
+                    res_b_r(cycles, reg.F, 6, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB2:
+                    res_b_r(cycles, reg.F, 6, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB3:
+                    res_b_r(cycles, reg.F, 6, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB4:
+                    res_b_r(cycles, reg.F, 6, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB5:
+                    res_b_r(cycles, reg.F, 6, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB6:
+                    res_b_r(cycles, reg.F, 6, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB7:
+                    res_b_r(cycles, reg.F, 6, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 6  A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0xB8:
+                    res_b_r(cycles, reg.F, 7, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xB9:
+                    res_b_r(cycles, reg.F, 7, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xBA:
+                    res_b_r(cycles, reg.F, 7, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xBB:
+                    res_b_r(cycles, reg.F, 7, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xBC:
+                    res_b_r(cycles, reg.F, 7, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xBD:
+                    res_b_r(cycles, reg.F, 7, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xBE:
+                    res_b_r(cycles, reg.F, 7, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xBF:
+                    res_b_r(cycles, reg.F, 7, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "res_b_r 7 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC0:
+                    set_b_r(cycles, reg.F, 0, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC1:
+                    set_b_r(cycles, reg.F, 0, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC2:
+                    set_b_r(cycles, reg.F, 0, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC3:
+                    set_b_r(cycles, reg.F, 0, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC4:
+                    set_b_r(cycles, reg.F, 0, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC5:
+                    set_b_r(cycles, reg.F, 0, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC6:
+                    set_b_r(cycles, reg.F, 0, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC7:
+                    set_b_r(cycles, reg.F, 0, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 0 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0xC8:
+                    set_b_r(cycles, reg.F, 1, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xC9:
+                    set_b_r(cycles, reg.F, 1, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xCA:
+                    set_b_r(cycles, reg.F, 1, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xCB:
+                    set_b_r(cycles, reg.F, 1, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xCC:
+                    set_b_r(cycles, reg.F, 1, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xCD:
+                    set_b_r(cycles, reg.F, 1, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xCE:
+                    set_b_r(cycles, reg.F, 1, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xCF:
+                    set_b_r(cycles, reg.F, 1, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 1 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD0:
+                    set_b_r(cycles, reg.F, 2, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "SLA B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD1:
+                    set_b_r(cycles, reg.F, 2, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 2 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD2:
+                    set_b_r(cycles, reg.F, 2, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 2 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD3:
+                    set_b_r(cycles, reg.F, 2, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 2 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD4:
+                    set_b_r(cycles, reg.F, 2, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 2 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD5:
+                    set_b_r(cycles, reg.F, 2, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 2 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD6:
+                    set_b_r(cycles, reg.F, 2, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 2 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD7:
+                    set_b_r(cycles, reg.F, 2, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 2 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0xD8:
+                    set_b_r(cycles, reg.F, 3, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xD9:
+                    set_b_r(cycles, reg.F, 3, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xDA:
+                    set_b_r(cycles, reg.F, 3, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xDB:
+                    set_b_r(cycles, reg.F, 3, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xDC:
+                    set_b_r(cycles, reg.F, 3, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xDD:
+                    set_b_r(cycles, reg.F, 3, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xDE:
+                    set_b_r(cycles, reg.F, 3, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xDF:
+                    set_b_r(cycles, reg.F, 3, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 3 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE0:
+                    set_b_r(cycles, reg.F, 4, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE1:
+                    set_b_r(cycles, reg.F, 4, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE2:
+                    set_b_r(cycles, reg.F, 4, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE3:
+                    set_b_r(cycles, reg.F, 4, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE4:
+                    set_b_r(cycles, reg.F, 4, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE5:
+                    set_b_r(cycles, reg.F, 4, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE6:
+                    set_b_r(cycles, reg.F, 4, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE7:
+                    set_b_r(cycles, reg.F, 4, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 4  A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0xE8:
+                    set_b_r(cycles, reg.F, 5, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xE9:
+                    set_b_r(cycles, reg.F, 5, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xEA:
+                    set_b_r(cycles, reg.F, 5, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xEB:
+                    set_b_r(cycles, reg.F, 5, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xEC:
+                    set_b_r(cycles, reg.F, 5, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xED:
+                    set_b_r(cycles, reg.F, 5, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xEE:
+                    set_b_r(cycles, reg.F, 5, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xEF:
+                    set_b_r(cycles, reg.F, 5, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 5 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF0:
+                    set_b_r(cycles, reg.F, 6, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF1:
+                    set_b_r(cycles, reg.F, 6, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF2:
+                    set_b_r(cycles, reg.F, 6, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF3:
+                    set_b_r(cycles, reg.F, 6, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF4:
+                    set_b_r(cycles, reg.F, 6, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF5:
+                    set_b_r(cycles, reg.F, 6, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF6:
+                    set_b_r(cycles, reg.F, 6, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF7:
+                    set_b_r(cycles, reg.F, 6, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 6  A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif      
+                    break;
+                case 0xF8:
+                    set_b_r(cycles, reg.F, 7, reg.B);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 B " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xF9:
+                    set_b_r(cycles, reg.F, 7, reg.C);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 C " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xFA:
+                    set_b_r(cycles, reg.F, 7, reg.D);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 D " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xFB:
+                    set_b_r(cycles, reg.F, 7, reg.E);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 E " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xFC:
+                    set_b_r(cycles, reg.F, 7, reg.H);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 H " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xFD:
+                    set_b_r(cycles, reg.F, 7, reg.L);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 L " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xFE:
+                    set_b_r(cycles, reg.F, 7, reg.HL);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 (HL) " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+                case 0xFF:
+                    set_b_r(cycles, reg.F, 7, reg.A);
+                    reg.PC.inc(1);
+#ifdef DEBUG_OPCODE 
+                    std::cout << "set_b_r 7 A " << std::hex << " ; " << reg.PC.getData_() - 1 << std::endl;
+#endif
+                    break;
+            }
             break;
             /*case 0x10: //TODO :Add halting of cpu and display 
             cycles = 4;

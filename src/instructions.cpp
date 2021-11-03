@@ -809,18 +809,111 @@ void RLCA(int& cycles, Register8& flag, Register8& r) {
         f |= 0x80;
        
     }
+    f &= ~0x80;
     cycles = 4;
+    r.setData(x);
 flag.setData(f);
 #ifdef DEBUG2
     std::cout << "RLCA" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
+void RLC(int& cycles, Register8& flag, Register8& r) {
+    uint8_t x = r.getData();
+    uint8_t f = flag.getData();
+    if (0x80 & x) {
+        f |= 0x10;
+    } else {
+        f &= ~0x10;
+    }
+    f &= ~0x60 & ~0x40;
+    x <<= 1;
+    x += 1;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    r.setData(x);
+    f &= ~0x80;
+    cycles = 4;
+flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "RLC" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void RLC(int& cycles, Register8& flag, Register16& r) {
+    uint8_t x = read_byte(r.getData());
+    uint8_t f = flag.getData();
+    if (0x80 & x) {
+        f |= 0x10;
+    } else {
+        f &= ~0x10;
+    }
+    f &= ~0x60 & ~0x40;
+    x <<= 1;
+    x += 1;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    f &= ~0x80;
+    cycles = 16;
+flag.setData(f);
+write_byte(r.getData(), x);
+#ifdef DEBUG2
+    std::cout << "RLC" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
 void RLA(int& cycles,Register8& flag,Register8& r) {
     uint8_t x = r.getData();
     uint8_t f = flag.getData();
     uint8_t carry = (f & 0x10 ) >> 8;
     cycles = 4;
+    if (x & 0x80)
+        f |= 0x10;
+    else
+        f &= ~0x10;
+    f &= ~0x60 & ~0x40;
+    x <<= 1;
+    x |= carry;
+    /*if (x == 0) {
+        f |= 0x80;
+       }*/
+    f &= ~0x80;
+    r.setData(x);
+    flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "RLA_R" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+
+void RLA(int& cycles,Register8& flag,Register16& r) {
+    uint8_t x = read_byte(r.getData());
+    uint8_t f = flag.getData();
+    uint8_t carry = (f & 0x10 ) >> 8;
+    cycles = 16;
+    if (x & 0x80)
+        f |= 0x10;
+    else
+        f &= ~0x10;
+    f &= ~0x60 & ~0x40;
+    x <<= 1;
+    x |= carry;
+    /*if (x == 0) {
+        f |= 0x80;
+       }*/
+    f &= ~0x80;
+    write_byte(r.getData(), x);
+    flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "RLA_R" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void RL(int& cycles,Register8& flag,Register8& r) {
+    uint8_t x = r.getData();
+    uint8_t f = flag.getData();
+    uint8_t carry = (f & 0x10 ) >> 8;
+    cycles = 8;
     if (x & 0x80)
         f |= 0x10;
     else
@@ -834,7 +927,28 @@ void RLA(int& cycles,Register8& flag,Register8& r) {
     r.setData(x);
     flag.setData(f);
 #ifdef DEBUG2
-    std::cout << "RLA_R" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+    std::cout << "RL_R" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void RL(int& cycles,Register8& flag,Register16& r) {
+    uint8_t x = read_byte(r.getData());
+    uint8_t f = flag.getData();
+    uint8_t carry = (f & 0x10 ) >> 8;
+    cycles = 16;
+    if (x & 0x80)
+        f |= 0x10;
+    else
+        f &= ~0x10;
+    f &= ~0x60 & ~0x40;
+    x <<= 1;
+    x |= carry;
+    if (x == 0) {
+        f |= 0x80;
+       }
+    write_byte(r.getData(),x);
+    flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "RL_R" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
@@ -854,10 +968,60 @@ void RRCA(int& cycles,Register8& flag,Register8& r) {
         f |= 0x80;
        
     }
+    f &= ~0x80;
     cycles = 4;
     flag.setData(f);
+    r.setData(x);
 #ifdef DEBUG2
     std::cout << "RRCA_r" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void RRC(int& cycles,Register8& flag,Register8& r) {
+    uint8_t x = r.getData();
+    uint8_t f = flag.getData();
+    uint8_t prevMSB = (x & 0x01) << 7;
+    if (0x01 & x) {
+        f |= 0x10;
+    } else {
+        f &= ~0x10;
+    }
+    f &= ~0x60 & ~0x40;
+    x>>= 1;
+    x += prevMSB;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    f &= ~0x80;
+    cycles = 8;
+    flag.setData(f);
+    r.setData(x);
+#ifdef DEBUG2
+    std::cout << "RRC_r" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void RRC(int& cycles,Register8& flag,Register16& r) {
+    uint8_t x = read_byte(r.getData());
+    uint8_t f = flag.getData();
+    uint8_t prevMSB = (x & 0x01) << 7;
+    if (0x01 & x) {
+        f |= 0x10;
+    } else {
+        f &= ~0x10;
+    }
+    f &= ~0x60 & ~0x40;
+    x>>= 1;
+    x += prevMSB;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    f &= ~0x80;
+    cycles = 16;
+    flag.setData(f);
+    write_byte(r.getData(),x);
+#ifdef DEBUG2
+    std::cout << "RRC_r" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
@@ -877,6 +1041,7 @@ void RRA(int& cycles,Register8& flag,Register8& r) {
    if (x == 0) {
        f |= 0x80;
    }
+   f &=  ~0x80;
    r.setData(x);
    flag.setData(f);
 #ifdef DEBUG2
@@ -884,8 +1049,56 @@ void RRA(int& cycles,Register8& flag,Register8& r) {
 #endif 
 }
 
-void SLA(int& cycles,uint8_t& f,Register8& r) {
+void RR(int& cycles,Register8& flag,Register8& r) {
+   uint8_t x = r.getData();
+   uint8_t f = flag.getData();
+   uint8_t carry = (f & 0x10) >> 1 ;  
+   cycles = 8;
+   if (x & 0x01) {
+    f |= 0x10;
+   } else {
+    f &= ~0x01;
+   }
+   cycles = 8;
+   f &= ~0x60 & ~0x40;
+   x >>= 1;
+   x+=carry;
+   if (x == 0) {
+       f |= 0x80;
+   }
+   r.setData(x);
+   flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "RRA_r" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+
+void RR(int& cycles,Register8& flag,Register16& r) {
+   uint8_t x = read_byte(r.getData());
+   uint8_t f = flag.getData();
+   uint8_t carry = (f & 0x10) >> 1 ;  
+   cycles = 16;
+   if (x & 0x01) {
+    f |= 0x10;
+   } else {
+    f &= ~0x01;
+   }
+   cycles = 16;
+   f &= ~0x60 & ~0x40;
+   x >>= 1;
+   x+=carry;
+   if (x == 0) {
+       f |= 0x80;
+   }
+   r.setData(x);
+    write_byte(r.getData(),x);
+#ifdef DEBUG2
+    std::cout << "RRA_r" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void SLA(int& cycles, Register8& flag, Register8& r) {
     uint8_t x = r.getData();
+    uint8_t f = flag.getData();
     if (0x80 & x) {
         f |= 0x20;
     } else {
@@ -898,10 +1111,74 @@ void SLA(int& cycles,uint8_t& f,Register8& r) {
         f |= 0x80;
        
     }
-    cycles = 4;
+    cycles = 8;
     r.setData(x);
 #ifdef DEBUG2
     std::cout << "SLA_" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void SLA(int& cycles, Register8& flag, Register16& r) {
+    uint8_t x = read_byte(r.getData());
+    uint8_t f = flag.getData();
+    if (0x80 & x) {
+        f |= 0x10;
+    } else {
+        f &= ~0x10;
+    }
+    f &= ~0x60 & ~0x40;
+    x <<= 1;
+    x &= ~0x01;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    cycles = 16;
+    write_byte(r.getData(),x);
+#ifdef DEBUG2
+    std::cout << "SLA_" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+
+void SRA(int& cycles, Register8& flag, Register8& r) {
+    uint8_t x = r.getData();
+    uint8_t f = flag.getData();
+    if (0x80 & x) {
+        f |= 0x10;
+    } else {
+        f &= ~0x10;
+    }
+    f &= ~0x60 & ~0x40;
+    x >>= 1;
+    //x &= ~0x01;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    cycles = 8;
+    r.setData(x);
+#ifdef DEBUG2
+    std::cout << "SRA_" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void SRA(int& cycles, Register8& flag, Register16& r) {
+    uint8_t x = read_byte(r.getData());
+    uint8_t f = flag.getData();
+    if (0x01 & x) {
+        f |= 0x10;
+    } else {
+        f &= ~0x10;
+    }
+    f &= ~0x60 & ~0x40;
+    x >>= 1;
+    //x &= ~0x80;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    cycles = 16;
+    write_byte(r.getData(),x);
+#ifdef DEBUG2
+    std::cout << "SRA_" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 /*void RLA(int& cycles,uint8_t& f,uint8_t& r) {
@@ -919,8 +1196,9 @@ void SLA(int& cycles,uint8_t& f,Register8& r) {
     cycles = 8;
 }*/
 
-void SRL(int& cycles,uint8_t& f,Register8& r) {
+void SRL(int& cycles, Register8& flag,Register8& r) {
     uint8_t x = r.getData();
+    uint8_t f = flag.getData();
     if (0x01 & x) {
         f |= 0x20;
     } else {
@@ -940,6 +1218,55 @@ void SRL(int& cycles,uint8_t& f,Register8& r) {
 #endif 
 }
 
+void SRL(int& cycles,Register8& flag,Register16& r) {
+    uint8_t x = read_byte(r.getData());
+    uint8_t f = flag.getData();
+    if (0x01 & x) {
+        f |= 0x20;
+    } else {
+        f &= ~0x20;
+    }
+    f &= ~0x60 & ~0x40;
+    x>>= 1;
+    x &= ~0x80;
+    if (x == 0) {
+        f |= 0x80;
+       
+    }
+    cycles = 16;
+    write_byte(r.getData(),x);
+#ifdef DEBUG2
+    std::cout << "SRL_" << r.getName() << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void SWAP(int& cycles, Register8& flag, Register8& r) {
+    uint8_t f = flag.getData();
+    uint8_t x = r.getData();
+    uint8_t y = (x >> 4) & 0x0f;
+    x |= y << 4;
+    if (x == 0) {
+        f |= 0x80;
+    }
+    f &= ~0x70;
+    flag.setData(f);
+    r.setData(x);
+    cycles = 8;
+}
+
+
+void SWAP(int& cycles, Register8& flag, Register16& r) {
+    uint8_t f = flag.getData();
+    uint8_t x = read_byte(r.getData());
+    uint8_t y = (x >> 4) & 0x0f;
+    x |= y << 4;
+    if (x == 0) {
+        f |= 0x80;
+    }
+    f &= ~0x70;
+    flag.setData(f);
+    write_byte(r.getData(),x);
+    cycles = 16;
+}
 void cmpbit_b_r(int& cycles,uint8_t& f,Register8 &r1,Register8 r2) {
     cycles = 8;
     uint8_t a = r1.getData();
@@ -952,30 +1279,71 @@ void cmpbit_b_r(int& cycles,uint8_t& f,Register8 &r1,Register8 r2) {
     f |= 0x40;
 
 #ifdef DEBUG2
-    std::cout << "cmpbit_" << r1.getName() << "_" << BIN(b) << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
+    std::cout << "cmpbit_" << r1.getName() << "_" << bit << ", f: " << std::hex <<int(f)<< ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void set_b_r(int& cycles,Register8 &r1,Register8 r2) {
+void set_b_r(int& cycles, Register8& flag, uint8_t bit, Register8& r) {
     cycles = 8;
-    r1.setData(r1.getData() |(1 << r2.getData()));
-    
+    r.setData(r.getData() | (1 << bit));
+     
 #ifdef DEBUG2
-    std::cout << "set_" << r1.getName() << "_" << BIN(r2.getData()) << ", cycles: " << std::dec << cycles << std::endl;
+    std::cout << "set_" << r1.getName() << "_" << bit << ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
-void res_b_r(int& cycles,Register8 &r1,Register8 r2) {
+void set_b_r(int& cycles, Register8& flag, uint8_t bit, Register16& r) {
+    cycles = 16;
+    write_byte(r.getData(),read_byte(r.getData()) | (1 << bit));
+     
+#ifdef DEBUG2
+    std::cout << "set_" << r1.getName() << "_" << bit << ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+void res_b_r(int& cycles, Register8& flag, uint8_t bit, Register8& r) {
     cycles = 8;
-    uint8_t a = r1.getData();
-    uint8_t b = r2.getData();
-    a &= ~(1 << b);
-    r1.setData(a);
+    r.setData(r.getData() & ~(1 << bit));
+     
 #ifdef DEBUG2
-    std::cout << "res_" << r1.getName() << "_" << BIN(b) << ", cycles: " << std::dec << cycles << std::endl;
+    std::cout << "res_" << r1.getName() << "_" << bit << ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 
+void res_b_r(int& cycles, Register8& flag, uint8_t bit, Register16& r) {
+    cycles = 16;
+    write_byte(r.getData(),read_byte(r.getData()) & ~(1 << bit));
+     
+#ifdef DEBUG2
+    std::cout << "res_" << r1.getName() << "_" << bit << ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+
+void bit_b_r(int& cycles, Register8& flag, uint8_t bit, Register8& r) {
+    cycles = 8;
+    uint8_t f = flag.getData();
+    if ((1 << bit) & r.getData()) {
+        f &= ~0x80;
+    }
+    f |= 0x20;
+    flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "bit_" << r1.getName() << "_" << bit << ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
+
+void bit_b_r(int& cycles, Register8& flag, uint8_t bit, Register16& r) {
+    cycles = 16;
+     
+    uint8_t f = flag.getData();
+    if ((1 << bit) & read_byte(r.getData())) {
+        f &= ~0x80;
+    }
+    f |= 0x20;
+    flag.setData(f);
+#ifdef DEBUG2
+    std::cout << "bit_" << r1.getName() << "_" << bit << ", cycles: " << std::dec << cycles << std::endl;
+#endif 
+}
 void rst(int& cycles,Register16& sp, Register16& pc, int n) {
 #ifdef DEBUG2
     std::cout << "rst_" << sp.getName() << "_" << pc.getName() << ", cycles: " << std::dec << 16 << std::endl << "  ";
