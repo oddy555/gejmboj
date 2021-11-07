@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string> 
 #include <map>
-
 #ifdef DEBUG2
 
 uint8_t* tempRegs[8];
@@ -24,7 +23,7 @@ void setup_debug_instr(uint16_t& a, uint16_t& b) {
 std::string matchRegister(uint8_t& addr) {
    std::string regs[8];
    regs[0] = "A";
-   regs[1] = "F";
+  
    regs[2] = "B";
    regs[3] = "C";
    regs[4] = "D";
@@ -118,9 +117,8 @@ void LDD_8(int& cycles, Register16 &r1, Register8 &r2) {
     uint16_t addr = r1.getData();
     write_byte(addr,r2.getData());
     r1.setData(addr-1);
-
 #ifdef DEBUG2
-    std::cout << "LDD_8_"<<matchRegister(addr)<<"_"<<r.getName()<<"_"<<std::hex<<addr<<", Value: " <<r.getData()<<", cycles: " << std::dec << cycles << std::endl; 
+    std::cout << "LDD_8_"<<"("<<r1.getName()<<")_"<<r2.getName()<<"_"<<std::hex<<int(addr)<<", Value: " <<int(r2.getData())<<", cycles: " << std::dec << cycles << std::endl; 
 #endif
 
 }
@@ -151,7 +149,7 @@ void LD_16_n_nn(int& cycles, Register16& r,uint16_t addr) {
 
 #ifdef DEBUG
     //std::cout << "LD_16_" << matchRegister(r) << "_" << std::hex << addr<<",value: "<< r  << ", cycles: " << std::dec << cycles << std::endl;
-    std::cout << "LD " << r.getName() << " " << std::hex << read_word(addr) << "; " << addr << ":" << addr-1 << "Cycles: " << std::dec << cycles << " LD_16_n_nn" << std::endl; 
+    std::cout << "LD " << r.getName() << " " << std::hex << read_word(addr) << "; " << addr << ":" << addr-1 << " Cycles: " << std::dec << cycles << " LD_16_n_nn" << std::endl; 
 #endif
 }
 
@@ -1323,11 +1321,13 @@ void bit_b_r(int& cycles, Register8& flag, uint8_t bit, Register8& r) {
     uint8_t f = flag.getData();
     if ((1 << bit) & r.getData()) {
         f &= ~0x80;
+    } else {
+        f |= 0x80;
     }
     f |= 0x20;
     flag.setData(f);
 #ifdef DEBUG2
-    std::cout << "bit_" << r1.getName() << "_" << bit << ", cycles: " << std::dec << cycles << std::endl;
+    std::cout << "bit_" << r1.getName() << "_" << bit << tmpF << f << ", cycles: " << std::dec << cycles << std::endl;
 #endif 
 }
 

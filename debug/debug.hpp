@@ -2,7 +2,7 @@
 #define DISASSEMBLY
 
 #ifdef DEBUGON
-#define DEBUG
+//#define DEBUG
 //#define DEBUGGER
 
 #include <bitset>
