@@ -193,8 +193,8 @@ void push(int& cycles, uint16_t r, Register16& sp) {
 }
 void pop(int& cycles, uint16_t& addr, Register16& sp) {
     cycles = 8;
-    addr = read_word(sp.getData_());
-    sp.setData(sp.getData_()+2);
+    addr = read_word(sp.getData_()+2);
+    sp.setData(sp.getData_());
 
 #ifdef DEBUG2
     std::cout << "pop_" << matchRegister(r) << "_" << matchRegister(sp)<<",value: "<<r<< ", cycles: " << std::dec << cycles << std::endl;
@@ -203,8 +203,8 @@ void pop(int& cycles, uint16_t& addr, Register16& sp) {
 
 void pop(int& cycles,Register16& r, Register16& sp) {
     cycles = 12;
-    r.setData(read_word(sp.getData_()));
     sp.inc(2);
+    r.setData(read_word(sp.getData_()));
 
 #ifdef DEBUG2
     std::cout << "pop_" << r.getName() << "_" << matchRegister(sp)<<",value: "<<r.getData()<< ", cycles: " << std::dec << cycles << std::endl;
@@ -795,6 +795,7 @@ void scf(int& cycles, Register8& flag) {
 void RLCA(int& cycles, Register8& flag, Register8& r) {
     uint8_t x = r.getData();
     uint8_t f = flag.getData();
+    uint8_t prevMsb = (x & 0x80)>>7;
     if (0x80 & x) {
         f |= 0x10;
     } else {
@@ -802,7 +803,7 @@ void RLCA(int& cycles, Register8& flag, Register8& r) {
     }
     f &= ~0x60 & ~0x40;
     x <<= 1;
-    x += 1;
+    x |= prevMsb;
     if (x == 0) {
         f |= 0x80;
        
@@ -819,14 +820,14 @@ flag.setData(f);
 void RLC(int& cycles, Register8& flag, Register8& r) {
     uint8_t x = r.getData();
     uint8_t f = flag.getData();
+    uint8_t prevMsb = (x & 0x80)>>7;
     if (0x80 & x) {
         f |= 0x10;
     } else {
         f &= ~0x10;
     }
     f &= ~0x60 & ~0x40;
-    x <<= 1;
-    x += 1;
+    x |= prevMsb;
     if (x == 0) {
         f |= 0x80;
        
@@ -842,6 +843,7 @@ flag.setData(f);
 void RLC(int& cycles, Register8& flag, Register16& r) {
     uint8_t x = read_byte(r.getData());
     uint8_t f = flag.getData();
+    uint8_t prevMsb = (x & 0x80)>>7;
     if (0x80 & x) {
         f |= 0x10;
     } else {
@@ -849,7 +851,7 @@ void RLC(int& cycles, Register8& flag, Register16& r) {
     }
     f &= ~0x60 & ~0x40;
     x <<= 1;
-    x += 1;
+    x |= prevMsb;
     if (x == 0) {
         f |= 0x80;
        
@@ -900,7 +902,7 @@ void RLA(int& cycles,Register8& flag,Register16& r) {
     /*if (x == 0) {
         f |= 0x80;
        }*/
-    f &= ~0x80;
+    //f &= ~0x80;
     write_byte(r.getData(), x);
     flag.setData(f);
 #ifdef DEBUG2

@@ -1602,6 +1602,7 @@ int eval_opcode(uint16_t opcode, int cycles) {
             break;
         case 0xC1:
             reg.PC.inc(1);
+            std::cout << std::hex << "BC: " << reg.BC.getData()<< " SP: "  << reg.SP.getData() << std::endl;
             pop(cycles, reg.BC, reg.SP);
 #ifdef DEBUG_OPCODE 
             std::cout << "POP BC " << std::hex << "; " << reg.PC.getData_()-1 << std::endl;
@@ -1651,6 +1652,7 @@ int eval_opcode(uint16_t opcode, int cycles) {
         case 0xC5:
             reg.PC.inc(1);
             push(cycles, reg.BC, reg.SP);
+            std::cout << std::hex << "BC: " << reg.BC.getData()<< " SP: "  << reg.SP.getData() << std::endl;
 #ifdef DEBUG_OPCODE 
             std::cout << "PUSH BC " << std::hex << "; " << reg.PC.getData_()-1 << std::endl;
 #endif
@@ -2050,10 +2052,11 @@ int eval_opcode(uint16_t opcode, int cycles) {
 #endif
             break;
         case 0xFE:
+            reg.PC.inc(1);
             cp_8(cycles, reg.F, reg.A, reg.PC);
             reg.PC.inc(1);
 #ifdef DEBUG_OPCODE 
-            std::cout << "CP A "<< D8 << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+            std::cout << "CP A "<< D8 << std::hex << " ; " << reg.PC.getData_()-2 << std::endl;
 #endif
             break;
         case 0xFF:
