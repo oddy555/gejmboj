@@ -1,2 +1,0 @@
-g++ -g -Wall -O3 -c src/cpu.cpp
-makefile:21: recipe for target 'cpu.o' failed
