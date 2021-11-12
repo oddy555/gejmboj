@@ -220,6 +220,8 @@ void add_8(int& cycles, Register8& f,Register8& r1,Register8 &r2) {
         flag |= 0x10;
     } else if (a + b == 0) {
         flag |= 0x80;
+    } else {
+        flag |= ~0x80;
     }
     if (((a&0xf) + (b&0xf))&0x10){
         flag |= 0x20;
@@ -598,6 +600,8 @@ void dec_8(int& cycles, Register8& f ,Register8& r1) {
     }
     if ((int) r1.getData() - (int) 1 == 0) {
         flag |= 0x80;
+    } else {
+        flag &= ~0x80;
     }
     r1.setData(r1.getData() - 1);
     flag |= 0x40;

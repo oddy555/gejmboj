@@ -41,7 +41,18 @@ struct registers {
     //Register16 &sp;
     uint16_t pc;
 } reg;
-
+void print_registers() {
+    std::cout << "---------------" << std::endl;
+    std::cout << "| A: " << std::hex << int(reg.A.getData()) << " | F: " << int(reg.F.getData()) << " |" << std::endl;
+    std::cout << "| AF: " << std::hex << int(reg.AF.getData()) << " |" << std::endl;
+    std::cout << "| B: " << std::hex << int(reg.B.getData()) << " | C: |" << int(reg.C.getData()) << " |" << std::endl;
+    std::cout << "| BC: " << std::hex << int(reg.BC.getData()) << " |" << std::endl;
+    std::cout << "| D: " << std::hex << int(reg.D.getData()) << " | D: |" << int(reg.E.getData()) << " |" << std::endl;
+    std::cout << "| DE: " << std::hex << int(reg.DE.getData()) << " |" << std::endl;
+    std::cout << "| H: " << std::hex << int(reg.H.getData()) << " | L: |" << int(reg.L.getData()) << " |"  << std::endl;
+    std::cout << "| HL: " << std::hex << int(reg.HL.getData()) << " |" << std::endl;
+    std::cout << "------------------" << std::endl;
+}
 
 /*void check_registers() {
     assert(reg.AF == (uint16_t(reg.A) >> 8 | uint16_t(reg.F)));
@@ -57,7 +68,7 @@ int c = 0x10;
 
 int eval_opcode(uint16_t opcode,int cycles);
 //void init_registers();
-
+//void skip_boot();
 void cpu_step() {
   //init_mem();
 
@@ -107,7 +118,7 @@ void cpu_step() {
     cycles = eval_opcode(opcode,cycles);
 
 #ifdef BLARGH
-    if (read_byte(0xff02) == 0x81) {
+    if (read_byte(0xff02 == 0x81)) {
         char c = read_byte(0xff01);
         printf("%c",c);
         write_byte(0xff02,0x0);
@@ -125,7 +136,6 @@ void cpu_step() {
         cycles += 8 + cycleTemp;
         
         //TODO: Check if we should enable several interrupts here
-        
         // V-Blank
         if (temp2 & 0b00000001) {
             LD_16_n_nn(cycleTemp,reg.PC,0x0040);
@@ -177,7 +187,7 @@ void init_registers() {
   reg.BC = Register16(&reg.B,&reg.C);
   reg.DE = Register16(&reg.D,&reg.E);
   reg.HL = Register16(&reg.H,&reg.L);
-  reg.PC = Register16(0,"PC"); 
+  reg.PC = Register16(0x0,"PC"); 
   //reg.pc = &reg.PC;
   reg.SP = Register16(0,"SP");
   //reg.sp = &reg.SP;
@@ -188,7 +198,6 @@ int eval_opcode(uint16_t opcode, int cycles) {
     uint16_t  tmpAddr = 0;
     Register16 tmpSP;
     int tmpCycles = 0;
-
 
 #ifdef DEBUG_OPCODE
             std::cout << "OPCODE: ; " << std::hex << opcode << std::endl;
@@ -369,7 +378,7 @@ int eval_opcode(uint16_t opcode, int cycles) {
             break;
         case 0x18:
             lastPC = reg.PC.getData_();
-            reg.PC.setData_(reg.PC.getData_() + (int8_t) read_byte((reg.PC.getData_()+1)));
+            reg.PC.setData_(reg.PC.getData_() + 2 + (int8_t) read_byte((reg.PC.getData_()+1)));
             cycles += 12;
 #ifdef DEBUG_OPCODE 
             std::cout << "JR " << std::hex << reg.PC.getData_() << " ; " << lastPC << std::endl;
@@ -497,7 +506,7 @@ int eval_opcode(uint16_t opcode, int cycles) {
             if (reg.F.getData() & FLAG_Z) {
                 cycles+=4;
                 uint16_t tmpAddr = reg.PC.getData_();
-                reg.PC.setData_(tmpAddr + (int8_t) read_byte(tmpAddr + 1));
+                reg.PC.setData_(tmpAddr + 2 + (int8_t) read_byte(tmpAddr + 1));
 #ifdef DEBUG_OPCODE 
             std::cout << "JR Z " << std::hex << reg.PC.getData_()  << "; " << tmpAddr << std::endl;
 #endif
@@ -1960,9 +1969,11 @@ int eval_opcode(uint16_t opcode, int cycles) {
             break;
         case 0xEA:
             reg.PC.inc(1);
-            LD_8_r_r(cycles, reg.PC.getData_() ,reg.A);
+            write_byte(read_word(reg.PC.getData_()),reg.A.getData());
+            //LD_8_r_r(cycles, reg.PC.getData_() ,reg.A);
+            reg.PC.inc(2);
 #ifdef DEBUG_OPCODE 
-            std::cout << "LD (a16) A" << std::hex << " ; " << reg.PC.getData_()-1 << std::endl;
+            std::cout << "LD (a16) A" << std::hex << " ; " << reg.PC.getData_()-3 << std::endl;
 #endif
             break;
         case 0xEE:
@@ -6105,4 +6116,69 @@ int _eval_opcode(uint16_t opcode,int cycles) {
     return cycles;
     }
 
+void skip_boot() {
+    reg.A.setData(0x1);
+    reg.F.setData(0x00);
+    reg.B.setData(0xFF);
+    reg.C.setData(0x13);
+    reg.E.setData(0xC1);
+    reg.H.setData(0x84);
+    reg.L.setData(0x03);
+    reg.PC.setData_(0x100);
+    reg.SP.setData_(0xFFFE);
 
+    write_byte(0xFF00,0xCF);
+    write_byte(0xFF01,0x00);
+    write_byte(0xFF02,0x7E);
+    write_byte(0xFF04,0x18);
+    write_byte(0xFF05,0x00);
+    write_byte(0xFF06,0x00);
+    write_byte(0xFF07,0xF8);
+    write_byte(0xFF0F,0xE1);
+    write_byte(0xFF10,0x80);
+    write_byte(0xFF11,0xBF);
+    write_byte(0xFF12,0xF3);
+    write_byte(0xFF13,0xFF);
+    write_byte(0xFF14,0xBF);
+    write_byte(0xFF16,0x3F);
+    write_byte(0xFF17,0x00);
+    write_byte(0xFF18,0xFF);
+    write_byte(0xFF19,0xBF);
+    write_byte(0xFF1A,0x7F);
+    write_byte(0xFF1B,0xFF);
+    write_byte(0xFF1C,0x9F);
+    write_byte(0xFF1D,0xFF);
+    write_byte(0xFF1E,0xBF);
+    write_byte(0xFF20,0xFF);
+    write_byte(0xFF21,0x00);
+    write_byte(0xFF22,0x00);
+    write_byte(0xFF23,0xBF);
+    write_byte(0xFF24,0x77);
+    write_byte(0xFF25,0xF3);
+    write_byte(0xFF26,0xF1);
+    write_byte(0xFF40,0x91);
+    write_byte(0xFF41,0x81);
+    write_byte(0xFF42,0x00);
+    write_byte(0xFF43,0x00);
+    write_byte(0xFF44,0x91);
+    write_byte(0xFF45,0x00);
+    write_byte(0xFF46,0xFF);
+    write_byte(0xFF47,0xFC);
+    write_byte(0xFF4A,0x00);
+    write_byte(0xFF4B,0x00);
+    write_byte(0xFF4D,0xFF);
+    write_byte(0xFF4F,0xFF);
+    write_byte(0xFF51,0xFF);
+    write_byte(0xFF52,0xFF);
+    write_byte(0xFF53,0xFF);
+    write_byte(0xFF54,0xFF);
+    write_byte(0xFF55,0xFF);
+    write_byte(0xFF56,0xFF);
+    write_byte(0xFF68,0xFF);
+    write_byte(0xFF69,0xFF);
+    write_byte(0xFF6A,0xFF);
+    write_byte(0xFF6B,0xFF);
+    write_byte(0xFF70,0xFF);
+    write_byte(0xFFFF,0x00);
+                                                                   
+}
