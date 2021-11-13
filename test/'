@@ -1,0 +1,18 @@
+#include "../inc/register.hpp"
+
+//void doStuff(Register8 r) {
+//}
+
+void doStuff(Register16 r,uint8_t data) {
+    r.setData(data);
+}
+
+int main() {
+    struct registers {
+        Register16 AF(0,"AF");
+        Register8 *A;
+        Register8 *F;
+    } reg;
+
+
+}

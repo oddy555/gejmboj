@@ -13,3 +13,4 @@ uint16_t read_word(int addr);
 void init_mem();
 
 void print_memory();
+void free_memory();
