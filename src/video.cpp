@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <queue>
-
+#include <iostream>
 const int SCREEN_WIDTH = 160;
 const int SCREEN_HEIGHT = 144;
 
@@ -32,7 +32,7 @@ const int LCDC = 0xFF40; //LCDC register
               3: During Transferring Data to LCD Driver*/
 const int LCDC_STATUS = 0xFF41; //LCDC status register
 
-int dotCounter = 0;
+static int dotCounter = 0;
 int lcdX = 0; //TODO is this even correct? Who knows, maybe god.
 
 SDL_Window* w = NULL;
@@ -64,7 +64,8 @@ void init_video () {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Could not intialize! SDL_Error: %s\n",SDL_GetError());
     } else {
-        w = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        w = SDL_CreateWindow( "SDL Tutorial", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        SDL_SetWindowBordered(w,SDL_TRUE);
         ren = SDL_CreateRenderer(w,-1, SDL_RENDERER_ACCELERATED);
         if(ren == NULL )
         {
@@ -86,6 +87,7 @@ void init_video () {
 
 
 int lcdController(int cycles) {
+    std::cout << "Enter lcdController, cycles: " << cycles  << " docounter: " << dotCounter  <<std::endl;
     int cycles2 = 0;
     int ly = 0;
     int bgX = 0;
