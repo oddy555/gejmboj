@@ -216,12 +216,11 @@ void add_8(int& cycles, Register8& f,Register8& r1,Register8 &r2) {
     int a = r1.getData();
     int b = r2.getData();
     uint8_t flag = f.getData();
+    flag |= ~0x80;
     if (a + b > 255) {
         flag |= 0x10;
     } else if (a + b == 0) {
         flag |= 0x80;
-    } else {
-        flag |= ~0x80;
     }
     if (((a&0xf) + (b&0xf))&0x10){
         flag |= 0x20;
@@ -239,6 +238,7 @@ void add_8(int& cycles, Register8& flag,Register8& r1,Register16 r2) {
     uint8_t t2 = read_byte(r2.getData());
     int a = (int) r1.getData();
     uint8_t f = flag.getData();
+    f &=  ~0x80;
     if (a + (int) t2 > 255) {
         f |= 0x10;
     } else if ((int) a + (int) t2 == 0) {
@@ -263,11 +263,12 @@ void adc(int& cycles, Register8& flag, Register8& r1,Register8 &r2) {
     if (f&0x10) {
         temp = 1;
     }
+        f &= ~0x80;
     if (a + b + (int) temp > 255) {
         f |= 0x10;
     } else if (a + b + (int) temp == 0) {
         f |= 0x80;
-    }
+    } 
     if (((a&0xf) + (b&0xf) + (f&0xf))&0x10){
         f |= 0x20;
     }
@@ -289,11 +290,12 @@ void adc(int& cycles, Register8& flag, Register8& r1,Register16 r2) {
     if (f&0x10) {
         temp = 1;
     }
+        f &= ~0x80;
     if ((int) a + (int) t2 + (int) temp > 255) {
         f |= 0x10;
     } else if ((int) a + (int) t2 + (int) temp == 0) {
         f |= 0x80;
-    }
+    } 
     if (((a&0xf) + (t2&0xf) + (f&0xf))&0x10){
         f |= 0x20;
     }
@@ -316,6 +318,7 @@ void sub_8(int& cycles, Register8& flag ,Register8& r1,Register8 &r2) {
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
+    f &= ~0x80;
     if ((int) r1.getData() - (int) r2.getData() < 0) {
         f |= 0x10;
     } else if ((int) r1.getData() - (int) r2.getData() == 0) {
@@ -340,6 +343,7 @@ void sub_8(int& cycles, Register8& flag ,Register8 & r1,Register16& r2) {
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
+    f &= ~0x80;
     if ((int) r1.getData() - (int) temp3 < 0) {
         f |= 0x10;
     } else if ((int) r1.getData() - (int) temp3 == 0) {
@@ -366,6 +370,7 @@ void subc(int& cycles,Register8& flag, Register8& r1,Register8& r2){
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
+    f &= ~0x80;
     if ((int) r1.getData() - ((int) r2.getData()-(int) temp) < 0) {
         f |= 0x10;
     } else if ((int) r1.getData() - ((int) r2.getData() - (int) temp) == 0) {
@@ -394,11 +399,12 @@ void subc(int& cycles, Register8& flag,Register8& r1,Register16& r2){
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
+    f &= ~0x80;
     if ((int) r1.getData() - ((int) r2.getData() -(int) temp) < 0) {
         f |= 0x10;
     } else if ((int) r1.getData() - ((int) temp3 - (int) temp) == 0) {
         f |= 0x80;
-    }
+    } 
     r1.setData(r1.getData() + (temp3+temp));
      f |= 0x40;
       flag.setData(f); 
@@ -412,6 +418,8 @@ void and_8(int &cycles,Register8 &flag, Register8 &r1,Register8 &r2) {
     uint8_t res = r1.getData() & r2.getData();
     if (res == 0) {
         f |= 0x80;
+    } else {
+        f &= ~0x80;
     }
         f &= ~0x40;
         f |= 0x20;
@@ -429,6 +437,8 @@ void and_8(int &cycles,Register8 &flag, Register8 &r1,Register16 &r2) {
     uint8_t res = r1.getData() & read_byte(r2.getData());
     if (res == 0) {
         f |= 0x80;
+    } else {
+        f &= ~0x80;
     }
         f &= ~0x40;
         f |= 0x20;
@@ -445,6 +455,8 @@ void or_8(int &cycles,Register8 &flag, Register8 &r1,Register8 &r2) {
     uint8_t res = r1.getData() | r2.getData();
     if (res == 0) {
         f |= 0x80;
+    } else {
+        f &= ~0x80;
     }
         f &= ~0x40;
         f &= ~0x20;
@@ -462,6 +474,8 @@ void or_8(int &cycles,Register8 &flag, Register8 &r1,Register16 &r2) {
     uint8_t res = r1.getData() | read_byte(r2.getData());
     if (res == 0) {
         f |= 0x80;
+    } else {
+        f &= ~0x80;
     }
         f &= ~0x40;
         f &= ~0x20;
@@ -478,6 +492,8 @@ void xor_8(int &cycles,Register8 &flag, Register8& r1,Register8& r2) {
     uint8_t f = flag.getData();
     if (res == 0) {
         f |= 0x80;
+    } else {
+        f &= ~0x80;
     }
         f &= ~0x40;
         f &= ~0x20;
@@ -493,6 +509,7 @@ void xor_8(int &cycles,Register8 &flag, Register8& r1,Register16& r2) {
     uint8_t res = r1.getData() & read_word(r2.getData());
     cycles = 4;
     uint8_t f = flag.getData();
+    f &= ~0x80;
     if (res == 0) {
         f |= 0x80;
     }
@@ -515,11 +532,12 @@ void cp_8(int& cycles,Register8& flag ,Register8& r1,Register8& r2) {
     if ((int) temp1 - (int) temp2) {
         f |=0x20;
     }
+    f &= ~0x80;
     if ((int) r1.getData() - (int) r2.getData() < 0) {
         f |= 0x10;
     } else if ((int) r1.getData() - (int) r2.getData() == 0) {
         f |= 0x80;
-    }
+    } 
     //r1 -= r2;
     f |= 0x40;
     flag.setData(f);
@@ -556,7 +574,10 @@ void inc_8(int& cycles,Register8& f ,Register8& r1) {
     uint8_t flag = f.getData();
     if ((int) r1.getData() + (int) 1 == 0) {
         flag |= 0x80;
+    } else {
+        flag &= ~0x80;
     }
+
     if (((r1.getData()&0xf) + (1&0xf))&0x10){
         flag |= 0x20;
     }
@@ -574,6 +595,8 @@ void inc_8(int& cycles,Register8& f , uint16_t addr) {
     uint8_t flag = f.getData();
     if ((int) read_byte(addr) + (int) 1 == 0) {
         flag |= 0x80;
+    } else {
+        flag &= ~0x80;
     }
     if (((read_byte(addr)&0xf) + (1&0xf))&0x10){
         flag |= 0x20;
@@ -622,6 +645,8 @@ void dec_8(int& cycles, Register8& f ,uint16_t addr) {
     }
     if ((int) read_byte(addr) - (int) 1 == 0) {
         flag |= 0x80;
+    } else {
+        flag &= ~0x80;
     }
     write_byte(addr,read_byte(addr) - 1);
     flag |= 0x40;
@@ -762,8 +787,11 @@ void daa(int& cycles, Register8& flag, Register8& r) {
 
     a &= 0xFF;
 
-    if (a == 0)
+    if (a == 0) {
         f |= 0x80;
+    } else {
+        f &= ~0x80;
+    }
    
     r.setData(a);
     flag.setData(f);
@@ -834,7 +862,8 @@ void RLC(int& cycles, Register8& flag, Register8& r) {
     x |= prevMsb;
     if (x == 0) {
         f |= 0x80;
-       
+    } else {
+        f &= ~0x80;
     }
     r.setData(x);
     f &= ~0x80;
@@ -925,6 +954,7 @@ void RL(int& cycles,Register8& flag,Register8& r) {
     f &= ~0x60 & ~0x40;
     x <<= 1;
     x |= carry;
+    f &= ~0x80;
     if (x == 0) {
         f |= 0x80;
        }
@@ -946,6 +976,7 @@ void RL(int& cycles,Register8& flag,Register16& r) {
     f &= ~0x60 & ~0x40;
     x <<= 1;
     x |= carry;
+    f &= ~0x80;
     if (x == 0) {
         f |= 0x80;
        }
@@ -1067,6 +1098,7 @@ void RR(int& cycles,Register8& flag,Register8& r) {
    f &= ~0x60 & ~0x40;
    x >>= 1;
    x+=carry;
+   f &= ~0x80;
    if (x == 0) {
        f |= 0x80;
    }
@@ -1091,6 +1123,7 @@ void RR(int& cycles,Register8& flag,Register16& r) {
    f &= ~0x60 & ~0x40;
    x >>= 1;
    x+=carry;
+   f &= ~0x80;
    if (x == 0) {
        f |= 0x80;
    }
@@ -1111,6 +1144,7 @@ void SLA(int& cycles, Register8& flag, Register8& r) {
     f &= ~0x60 & ~0x40;
     x <<= 1;
     x &= ~0x01;
+    f &= ~0x80;
     if (x == 0) {
         f |= 0x80;
        
@@ -1132,6 +1166,7 @@ void SLA(int& cycles, Register8& flag, Register16& r) {
     f &= ~0x60 & ~0x40;
     x <<= 1;
     x &= ~0x01;
+    f &= ~0x80;
     if (x == 0) {
         f |= 0x80;
        
@@ -1211,6 +1246,7 @@ void SRL(int& cycles, Register8& flag,Register8& r) {
     f &= ~0x60 & ~0x40;
     x>>= 1;
     x &= ~0x80;
+    f &= ~0x80;
     if (x == 0) {
         f |= 0x80;
        
