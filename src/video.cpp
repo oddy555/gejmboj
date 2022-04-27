@@ -32,7 +32,11 @@ const int LCDC = 0xFF40; //LCDC register
               3: During Transferring Data to LCD Driver*/
 const int LCDC_STATUS = 0xFF41; //LCDC status register
 
-static int dotCounter = 0;
+//VRAM
+const int OAM_START = 0xFE00;
+
+static int dotCounter;
+
 int lcdX = 0; //TODO is this even correct? Who knows, maybe god.
 
 SDL_Window* w = NULL;
@@ -52,14 +56,17 @@ struct sprite {
     uint8_t attFlag;
 };
 
+static sprite spriteBuffer[10];
+
 std::queue<pixel> spriteQ;
 std::queue<pixel> bgQ;
+std::queue<pixel> pixelQ;
 
 void close();
 
 void init_video () {
     SDL_SetMainReady();
-    
+   dotCounter = 0; 
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Could not intialize! SDL_Error: %s\n",SDL_GetError());
@@ -87,9 +94,10 @@ void init_video () {
 
 
 int lcdController(int cycles) {
-    std::cout << "Enter lcdController, cycles: " << cycles  << " docounter: " << dotCounter  <<std::endl;
+    //std::cout << "Enter lcdController, cycles: " << cycles  << " docounter: " << dotCounter  <<std::endl;
     int cycles2 = 0;
     int ly = 0;
+    static int lx;
     int bgX = 0;
     int bgY = 0;
     int wX = 0;
@@ -105,40 +113,67 @@ int lcdController(int cycles) {
     cycles = cycles;
     ly = read_byte(LY);
 
+    static int spriteCounter; 
+    
     for (int i = 0; i < cycles; i++) {
         sf = SDL_GetWindowSurface(w);
-        //dotCounter++;
-        
+                
         if (lcdc & 0x80) {
             //OAM Scan
             if (dotCounter >= 0 && dotCounter <= 79) {
-                 
+                if (dotCounter == 0) {
+                    spriteCounter = 0;
+                    memset(spriteBuffer,0,10);
+                }
+                if (spriteCounter == 10) {
+                    continue;
+                }
+                if (dotCounter % 2 == 1) {
+                    uint16_t addr = OAM_START + dotCounter;
+                    uint8_t yPos = read_byte(OAM_START+4*(dotCounter/2)) - 16;    
+                    uint8_t xPos = read_byte(OAM_START+4*(dotCounter/2)+1);
+                    uint8_t tileLoc = read_byte(OAM_START+4*(spriteCounter/2)+2);
+                    uint8_t spriteAttr = read_byte(OAM_START+4*(spriteCounter/2)+3);
+                    
+                    if (ly >= yPos && ly <= yPos + 8) {
+                           spriteBuffer[spriteCounter++] = sprite{yPos, xPos, tileLoc, spriteAttr};
+                        if (lcdc & 0x02) {
+                            spriteBuffer[spriteCounter].tileN &= 0x01;
+                            spriteBuffer[spriteCounter++] = sprite{yPos + 8, xPos, tileLoc & 0xFE, spriteAttr};
+                        }
+                    }
+                }
             } else if (dotCounter > 79 && dotCounter <= mode3Len) {
                 bgX = read_byte(0xFF43);
                 bgY = read_byte(0xff42);
                 wX = read_byte(0xFF4B);
                 wY = read_byte(0xff4a);
-
+                int scX = read_byte(0xff43);
+                int scY = read_byte(0xff42);
                 if (dotCounter == 80) {
+                    lx = 0;
                     lcdcStatus = lcdcStatus | 0x03;
                     std::queue<pixel> empty1;
                     std::queue<pixel> empty2;
+                    std::queue<pixel> empty3;
                     std::swap(spriteQ,empty1);
                     std::swap(bgQ,empty2);
+                    std::swap(pixelQ, empty3);
                 }
                 
                 if ((lcdc & 0x04 && lcdX < wX)|| (lcdc & 0x07 && lcdX > wX)) { //TODO wX should not be used here, probably
                     bgTileLoc = 0x9c00;
                 }
-                uint8_t lyMod = ly % 8;
-                uint8_t temp1 = read_byte(bgTileLoc + lyMod);
-                uint8_t temp2 = read_byte(bgTileLoc + lyMod + 1); 
+                uint8_t lyMod = lx % 8;
+                uint8_t temp1 = read_byte(bgTileLoc + lx);
+                uint8_t temp2 = read_byte(bgTileLoc + lx + 1); 
                 for (int j = 7; j >= 0; j--) {
                     pixel bgP;
                     bgP.color = (((temp1 >> j) & 1)<<1);
                     bgP.color |= ((temp2 >> j) & 1);
-                    bgQ.push(bgP);
+                    pixelQ.push(bgP);
                 }
+                if (pixelQ.size() > 8) {
                 for (int j = 0; j < 8; j++)
                 {
                     pixel tempP = bgQ.front();
@@ -158,8 +193,9 @@ int lcdController(int cycles) {
                         default:
                             printf("ERROR ILLEGAL PIXEL VALUE");
                     }
-                    SDL_RenderDrawPoint(ren,bgX+j,bgY+lyMod);
-                    bgQ.pop();
+                    SDL_RenderDrawPoint(ren,bgX+scX+j,bgY+bgY+lyMod);
+                    //bgQ.pop();
+                }
                 }
                 SDL_UpdateWindowSurface(w);
                 dotCounter += 2;
@@ -168,9 +204,13 @@ int lcdController(int cycles) {
             } else if (dotCounter == 455) {
                 //TODO this will mess up timing probably
                 write_byte(LY,ly++);
-                dotCounter = i;
+                dotCounter = 0;
+                write_byte(LY,ly+1);
+                continue;
             }
         }
+        dotCounter ++;
+        write_byte(LY,ly+1);
     }
 
     return 0;

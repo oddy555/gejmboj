@@ -70,7 +70,7 @@ int c = 0x10;
 int eval_opcode(uint16_t opcode,int cycles);
 //void init_registers();
 //void skip_boot();
-void cpu_step() {
+void cpu_step(int &running) {
   //init_mem();
 
   //int a = 0x01;
@@ -93,7 +93,7 @@ void cpu_step() {
   reg.sp = 0;
   reg.pc = 0;*/
 
-  int running = 1;    
+  //int running = 1;    
 #ifdef DEBUGGER
   int debugF = 0;
   start_debugger();
@@ -127,7 +127,7 @@ void cpu_step() {
     }
 #endif
     uint8_t temp2 = read_byte(IE_R) & read_byte(IF_R); 
-    if (false &&ime == 1 && temp2) {
+    if (false && ime == 1 && temp2) {
 #ifdef DEBUG
         std::cout << "Interrupt! bitmap: " << BIN(temp2) << std::endl;
 #endif
@@ -173,7 +173,8 @@ void cpu_step() {
     
     lcdController(cycles);
     if (eventController() == 1) {
-        running = 1; 
+        running = 0;
+        return;
     }
     usleep((cycles/4190000)*100000);
     cycles = 0;    
