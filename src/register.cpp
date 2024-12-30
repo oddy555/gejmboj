@@ -88,8 +88,8 @@ void Register16::setData(uint16_t data) {
     if (this->name == "SP" || this->name == "PC") {
         this->data = data;
     } else {
-        uint8_t l = data & 0x00ff;
-        uint8_t h = (data & 0xff00) >> 8;
+        uint8_t l = ((uint16_t)  data) & 0x00ff;
+        uint8_t h = (((uint16_t) data) & 0xff00) >> 8;
         (*low).setData(l);
         (*high).setData(h);
     }

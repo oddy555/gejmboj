@@ -1,10 +1,12 @@
 CC = g++
-CFLAGS =  -g -Wall -O3 -c
-LDFLAGS = -g -Wall -O3	
+#CFLAGS =  -g -Wall -O3 -c
+#LDFLAGS = -g -Wall -O3
+CFLAGS =  -g -Wall -c -ggdb
+LDFLAGS = -g -Wall -ggdb
 GTEST = -lgtest -lgtest_main -lpthread
 
 main: cpu.o memory.o instructions.o video.o debug.o register.o
-	$(CC) $(LDFLAGS) -lSDL2 src/main.cpp cpu.o memory.o instructions.o video.o debug.o register.o -o main		
+	$(CC) $(LDFLAGS) src/main.cpp cpu.o memory.o instructions.o video.o debug.o register.o -lSDL2 -o main 		
 
 debug: cpu_debug.o memory.o instructions_debug.o debug.o
 	$(CC) $(LDFLAGS) cpu.o memory.o instructions.o debug.o -o mainDebug	
@@ -30,10 +32,13 @@ cpu_test: test/cpu_test.cpp cpu.o memory.o instructions.o register.o debug.o
 	$(CC) $(LDFLAGS) test/cpu_test.cpp cpu.o memory.o instructions.o register.o debug.o $(GTEST)
 
 instructions_test: test/instructions_test.cpp memory.o instructions.o register.o debug.o 
-	$(CC) $(LDFLAGS) test/instructions_test.cpp memory.o instructions.o register.o debug.o $(GTEST) 
+	$(CC) $(LDFLAGS) -g3 test/instructions_test.cpp memory.o instructions.o register.o debug.o $(GTEST) 
 
 memory_test: test/memory_test.cpp src/memory.cpp inc/memory.hpp
 	$(CC) $(LDFLAGS) test/memory_test.cpp src/memory.cpp inc/memory.hpp 
+
+sm83_test: test/sm83_tests.cpp memory.o instructions.o register.o debug.o cpu.o
+	$(CC) $(LDFLAGS) -g3 test/sm83_tests.cpp memory.o instructions.o register.o debug.o cpu.o $(GTEST) 
 
 #register_test: test/register_test.cpp inc/register.hpp src/register.cpp
 register_test: test/register_test.cpp src/register.cpp inc/register.hpp
