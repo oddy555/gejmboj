@@ -36,7 +36,7 @@ void set_bootRom() {
   bootRom.open("./roms/DMG_ROM.bin",std::ios::in | std::ios::binary);
   if (bootRom.is_open()) {
       bootRom.read((char *) memory,256);
-  } else {
+  } else {  
     std::cout << "Unable to open file" << std::endl;
   }
  // printf((char*) memory);
@@ -47,8 +47,8 @@ void set_bootRom() {
 void init_mem() {
     memory = new uint8_t[65536];
     memset(memory,0,65536);
-//    init_rom();
-    //set_bootRom();
+    //init_rom();
+    set_bootRom();
     //Scrolling Nintendo graphic
     /*    uint8_t temp[] = {0xCE,0xEE,0x66,0x66,0xCC,0x0D,0x00,0x0B,0x03,0x73,0x00,0x83,0x00,0x0C,0x00,0x0D,0x00,0x08,0x11,0x1F,0x88,0x89,0x00,0x0E,0xDC,0xCC,0x6E,0xE6,0xDD,0xDD,0xD9,0x99,0xBB,0xBB,0x67,0x63,0x6E,0x0E,0xEC,0xCC,0xDD,0xDC,0x99,0x9F,0xBB,0xB9,0x33,0x3E};
     for (int i = 0;i < sizeof(temp)/sizeof(uint8_t *);i++) {
@@ -74,6 +74,7 @@ void init_rom() {
         //@TODO: Read 32kB, this might have to be more flexible
         //rom.read((char *) memory + 256,romSize);
         rom.read((char *) memory,romSize);
+        //print_memory();
     }
     //rom = new uint8_t[romSize]; 
     rom.close();
@@ -110,7 +111,7 @@ uint16_t read_word(int addr) {
 void print_memory() {
     std::cout << "Memory layout:" << std::endl;
     for (int i = 0; i < 65535; i++) {
-        std::cout << "["<< std::hex << i<< "]" << "[" << std::hex << ((uint8_t *) memory)[i] << "]" << std::endl;
+        std::cout << "["<< std::hex << i<< "]" << "[" << std::hex << int(((uint8_t *) memory)[i]) << "]" << std::endl;
     }
 }
 

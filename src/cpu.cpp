@@ -7,11 +7,10 @@
 #include "../inc/register.hpp"
 #include "../inc/memory.hpp"
 #include "../inc/instructions.hpp"
-#include "../inc/video.hpp"
 #include "../debug/debug.hpp"
 #include "../inc/cpu.hpp"
 
-#define BLARGH
+//#define BLARGH
 #define DEBUG_OPCODE
  
 #define WORD_LOAD 2
@@ -69,7 +68,7 @@ int c = 0x10;
 
 int eval_opcode(uint16_t opcode,int cycles);
 //void init_registers();
-//void skip_boot();
+void skip_boot();
 void cpu_step(int &running) {
   //init_mem();
 
@@ -81,19 +80,6 @@ void cpu_step(int &running) {
   uint16_t opcode;
   uint8_t temp;
 
-  //uint8_t temp = 0;
-/*  reg.A = 0;
-  reg.F = 0;
-  reg.B = 0;
-  reg.C = 0;
-  reg.D = 0;
-  reg.E = 0;
-  reg.H = 0;
-  reg.L = 0;
-  reg.sp = 0;
-  reg.pc = 0;*/
-
-  //int running = 1;    
 #ifdef DEBUGGER
   int debugF = 0;
   start_debugger();
@@ -120,14 +106,16 @@ void cpu_step(int &running) {
     cycles = eval_opcode(opcode,cycles);
 
 #ifdef BLARGH
+    std::cout << "=== BLARGG PRINT START ===" << std::endl;
     if (read_byte(0xff02) == 0x81) {
         char c = read_word(0xff01);
         printf("%c",c);
         write_byte(0xff02,0x0);
     }
+    std::cout << "=== BLARGG PRINT END ===" << std::endl;
 #endif
-    uint8_t temp2 = read_byte(IE_R) & read_byte(IF_R); 
-    if (false && ime == 1 && temp2) {
+    uint8_t interruptBm = read_byte(IE_R) & read_byte(IF_R); 
+    if (false && ime == 1 && interruptBm) {
 #ifdef DEBUG
         std::cout << "Interrupt! bitmap: " << BIN(temp2) << std::endl;
 #endif
@@ -139,31 +127,31 @@ void cpu_step(int &running) {
         
         //TODO: Check if we should enable several interrupts here
         // V-Blank
-        if (temp2 & 0b00000001) {
+        if (interruptBm & 0b00000001) {
             LD_16_n_nn(cycleTemp,reg.PC,0x0040);
             cycles += cycleTemp;
             cycles = 0;
             return;
         // LCD STAT
-        } else if (temp2 & 0b00000010) {
+        } else if (interruptBm & 0b00000010) {
             LD_16_n_nn(cycleTemp,reg.PC,0x0048);
             cycles += cycleTemp;
             cycles = 0;           
             return;
             // Timer
-        } else if (temp2 & 0b00000100) {
+        } else if (interruptBm & 0b00000100) {
             LD_16_n_nn(cycleTemp,reg.PC,0x0050);
             cycles += cycleTemp;
             cycles = 0;           
             return;
             // Serial
-        } else if (temp2 & 0b00001000) {
+        } else if (interruptBm & 0b00001000) {
             LD_16_n_nn(cycleTemp,reg.PC,0x0058);
             cycles += cycleTemp;
             cycles = 0;           
             return;
             // Joypad    
-        }  else if (temp2 & 0b00010000) {
+        }  else if (interruptBm & 0b00010000) {
             LD_16_n_nn(cycleTemp,reg.PC, 0x0060);
             cycles += cycleTemp;
             cycles = 0;           
@@ -171,12 +159,7 @@ void cpu_step(int &running) {
         } 
     }
     
-    //lcdController(cycles);
-   /* if (eventController() == 1) {
-        running = 0;
-        return;
-    }*/
-    usleep((cycles/4190000)*100000);
+    usleep(((cycles)/4190000)*100000);
     cycles = 0;    
 }
 
@@ -1944,8 +1927,10 @@ int eval_opcode(uint16_t opcode, int cycles) {
         case 0xD9:
             cycles = 16;
             cycles+=4;
+            ime = 1;
             pop(cycles, tmpAddr, reg.SP) ;
             reg.PC.setData_(tmpAddr);
+            
 #ifdef DEBUG_OPCODE 
             std::cout << "RETI " << std::hex << reg.PC.getData_()  << "; " << tmpAddr << std::endl;
 #endif

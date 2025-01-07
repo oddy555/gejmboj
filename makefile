@@ -23,8 +23,6 @@ instructions.o: src/instructions.cpp inc/register.hpp inc/instructions.hpp inc/m
 cpu.o: src/cpu.cpp inc/cpu.hpp inc/register.hpp inc/instructions.hpp inc/memory.hpp 
 	$(CC) $(CFLAGS) src/cpu.cpp
 
-video.o: src/video.cpp inc/video.hpp
-	$(CC) $(CFLAGS) -lSDL2 src/video.cpp
 #cpu_test: test/cpu_test.cpp src/cpu.cpp inc/cpu.hpp inc/register.hpp src/register.cpp inc/instructions.hpp src/instructions.cpp inc/memory.hpp src/memory.cpp
 #	$(CC) $(LDFLAGS) test/cpu_test.cpp src/cpu.cpp inc/cpu.hpp 
 
