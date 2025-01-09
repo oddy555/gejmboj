@@ -5,8 +5,8 @@ CFLAGS =  -g -Wall -c -ggdb
 LDFLAGS = -g -Wall -ggdb
 GTEST = -lgtest -lgtest_main -lpthread
 
-main: cpu.o memory.o instructions.o video.o debug.o register.o
-	$(CC) $(LDFLAGS) src/main.cpp cpu.o memory.o instructions.o video.o debug.o register.o -lSDL2 -o main 		
+main: cpu.o memory.o instructions.o ppu.o debug.o register.o
+	$(CC) $(LDFLAGS) src/main.cpp cpu.o memory.o instructions.o ppu.o debug.o register.o -lSDL2 -o main 		
 
 debug: cpu_debug.o memory.o instructions_debug.o debug.o
 	$(CC) $(LDFLAGS) cpu.o memory.o instructions.o debug.o -o mainDebug	
@@ -23,8 +23,8 @@ instructions.o: src/instructions.cpp inc/register.hpp inc/instructions.hpp inc/m
 cpu.o: src/cpu.cpp inc/cpu.hpp inc/register.hpp inc/instructions.hpp inc/memory.hpp 
 	$(CC) $(CFLAGS) src/cpu.cpp
 
-video.o: src/video.cpp inc/video.hpp
-	$(CC) $(CFLAGS) -lSDL2 src/video.cpp
+ppu.o: src/ppu.cpp inc/ppu.hpp
+	$(CC) $(CFLAGS) -lSDL2 src/ppu.cpp
 #cpu_test: test/cpu_test.cpp src/cpu.cpp inc/cpu.hpp inc/register.hpp src/register.cpp inc/instructions.hpp src/instructions.cpp inc/memory.hpp src/memory.cpp
 #	$(CC) $(LDFLAGS) test/cpu_test.cpp src/cpu.cpp inc/cpu.hpp 
 
@@ -53,8 +53,8 @@ instructions_debug.o: src/instructions.cpp inc/memory.hpp inc/instructions.hpp d
 cpu_debug.o: src/cpu.cpp inc/memory.hpp inc/instructions.hpp debug/debug.hpp
 	$(CC) $(CFLAGS) src/cpu.cpp
 
-#video_debug.o: src/video.cpp inc/video.hpp
-#	$(CC) $(CFLAGS) -lSDL2 src/video.cpp 
+#ppu_debug.o: src/ppu.cpp inc/ppu.hpp
+#	$(CC) $(CFLAGS) -lSDL2 src/ppu.cpp 
 
 
 debug.o: debug/debug.cpp debug/debug.hpp inc/memory.hpp

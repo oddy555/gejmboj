@@ -70,7 +70,7 @@ int c = 0x10;
 int eval_opcode(uint16_t opcode,int cycles);
 //void init_registers();
 //void skip_boot();
-void cpu_step(int &running) {
+void cpu_step(int &running, Ppu &ppu) {
   //init_mem();
 
   //int a = 0x01;
@@ -171,11 +171,11 @@ void cpu_step(int &running) {
         } 
     }
     
-    //lcdController(cycles);
-   /* if (eventController() == 1) {
+    ppu.lcdController(cycles);
+    if (ppu.eventController() == 1) {
         running = 0;
         return;
-    }*/
+    }
     usleep((cycles/4190000)*100000);
     cycles = 0;    
 }

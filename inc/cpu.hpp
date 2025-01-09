@@ -1,7 +1,8 @@
 #include <cstdint>
 #include "../inc/register.hpp"
+#include "../inc/ppu.hpp"
 
-void cpu_step(int &running);
+void cpu_step(int &running, Ppu &ppu);
 void init_registers();
 void set_registers(Register8 A, Register8 F, 
                    Register8 B, Register8 C,
